@@ -23,7 +23,7 @@ func TestRandomHex(t *testing.T) {
 		{"16->32", 16, 32},
 		{"32->64", 32, 64},
 		{"8->16", 8, 16},
-		{"math.MaxInt32", math.MaxInt32, 4294967294},
+		// {"math.MaxInt32", math.MaxInt32, 4294967294},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
