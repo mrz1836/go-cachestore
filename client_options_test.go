@@ -123,7 +123,7 @@ func TestWithRedis(t *testing.T) {
 		}
 
 		config := &RedisConfig{
-			URL: "localhost:6379",
+			URL: "localhost:" + DefaultRedisPort,
 		}
 		opts := []ClientOps{WithDebugging(), WithRedis(config)}
 		c, err := NewClient(context.Background(), opts...)

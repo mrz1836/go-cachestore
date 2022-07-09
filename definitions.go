@@ -8,6 +8,9 @@ const (
 	// DefaultRedisMaxIdleTimeout is the default max timeout on an idle connection
 	DefaultRedisMaxIdleTimeout = 240 * time.Second
 
+	// DefaultRedisPort is the default Redis port
+	DefaultRedisPort = "6379"
+
 	// Empty time duration for comparison
 	emptyTimeDuration = "0s"
 

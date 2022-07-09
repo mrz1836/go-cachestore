@@ -14,23 +14,23 @@ import (
 )
 
 const (
+	testAppName              = "test-app"
 	testIdleTimeout          = 240 * time.Second
 	testKey                  = "test-key"
-	testLocalConnectionURL   = RedisPrefix + "localhost:6379"
+	testLocalConnectionURL   = RedisPrefix + "localhost:" + DefaultRedisPort
 	testMaxActiveConnections = 0
 	testMaxConnLifetime      = 60 * time.Second
 	testMaxIdleConnections   = 10
-	testValue                = "test-value"
-	testAppName              = "test-app"
 	testTxn                  = "test-txn"
+	testValue                = "test-value"
 )
 
 // genericStruct is an example struct for testing
 type genericStruct struct {
-	StringField string
-	IntField    int
 	BoolField   bool
 	FloatField  float64
+	IntField    int
+	StringField string
 }
 
 // newMockRedisClient will create a new redis mock client
@@ -71,21 +71,21 @@ func TestClient_SetRedis(t *testing.T) {
 		require.NotNil(t, client)
 		require.NotNil(t, conn)
 
-		fees := "512"
+		exampleString := "512"
 
 		// Set command
-		setCmd := conn.Command(cache.SetCommand, testKey, fees).Expect(fees)
-		err := client.Set(ctx, testKey, fees)
+		setCmd := conn.Command(cache.SetCommand, testKey, exampleString).Expect(exampleString)
+		err := client.Set(ctx, testKey, exampleString)
 		require.NoError(t, err)
 		assert.Equal(t, true, setCmd.Called)
 
 		// Get command
-		getCmd := conn.Command(cache.GetCommand, testKey).Expect(fees)
-		getFees, err2 := client.Get(ctx, testKey)
+		getCmd := conn.Command(cache.GetCommand, testKey).Expect(exampleString)
+		getExample, err2 := client.Get(ctx, testKey)
 		require.NoError(t, err2)
 		assert.Equal(t, true, getCmd.Called)
 
-		assert.Equal(t, fees, getFees)
+		assert.Equal(t, exampleString, getExample)
 	})
 
 	t.Run("["+Redis.String()+"] [in-memory] valid get/set using redis", func(t *testing.T) {
@@ -107,17 +107,17 @@ func TestClient_SetRedis(t *testing.T) {
 			_ = c.EmptyCache(context.Background())
 		}()
 
-		fees := "512"
+		exampleString := "512"
 
 		// Set command
-		err = c.Set(ctx, testKey, fees)
+		err = c.Set(ctx, testKey, exampleString)
 		require.NoError(t, err)
 
 		// Get command
-		getFees, err2 := c.Get(ctx, testKey)
+		getExample, err2 := c.Get(ctx, testKey)
 		require.NoError(t, err2)
 
-		assert.Equal(t, fees, getFees)
+		assert.Equal(t, exampleString, getExample)
 	})
 }
 
