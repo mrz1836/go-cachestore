@@ -11,8 +11,6 @@ on:
   push:
     branches:
       - "*"
-  # schedule:
-  #  - cron: '1 4 * * *'
 
 jobs:
   yamllint:
@@ -38,7 +36,7 @@ jobs:
     needs: [yamllint, asknancy]
     strategy:
       matrix:
-        go-version: [1.17.x, 1.18.x]
+        go-version: [ 1.17.x, 1.18.x ]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
