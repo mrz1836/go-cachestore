@@ -38,7 +38,7 @@
   description: "Dependency updates"
   name: "dependencies"
 - color: 006b75
-  description: "General updates"
+  description: "Any general updates"
   name: "update"
 - color: FFA500
   description: "Any significant refactoring"
