@@ -50,7 +50,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-cach
 
 This repository was created using [MrZ's `go-template`](https://github.com/mrz1836/go-template#about)
 
-#### Built-in Features
+### Built-in Features
 - Continuous integration via [GitHub Actions](https://github.com/features/actions)
 - Build automation via [Make](https://www.gnu.org/software/make)
 - Dependency management using [Go Modules](https://github.com/golang/go/wiki/Modules)
@@ -60,16 +60,16 @@ This repository was created using [MrZ's `go-template`](https://github.com/mrz18
 - Dependency scanning and updating thanks to [Dependabot](https://dependabot.com) and [Nancy](https://github.com/sonatype-nexus-community/nancy)
 - Security code analysis using [CodeQL Action](https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/about-code-scanning)
 - Automatic syndication to [pkg.go.dev](https://pkg.go.dev/) on every release
-- Generic templates for [Issues and Pull Requests](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository) in Github
-- All standard Github files such as `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`
-- Code [ownership configuration](.github/CODEOWNERS) for Github
+- Generic templates for [Issues and Pull Requests](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository) in GitHub
+- All standard GitHub files such as `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`
+- Code [ownership configuration](.github/CODEOWNERS) for GitHub
 - All your ignore files for [vs-code](.editorconfig), [docker](.dockerignore) and [git](.gitignore)
-- Automatic sync for [labels](.github/labels.yml) into Github using a pre-defined [configuration](.github/labels.yml)
+- Automatic sync for [labels](.github/labels.yml) into GitHub using a pre-defined [configuration](.github/labels.yml)
 - Built-in powerful merging rules using [Mergify](https://mergify.io/)
 - Welcome [new contributors](.github/mergify.yml) on their first Pull-Request
 - Follows the [standard-readme](https://github.com/RichardLitt/standard-readme/blob/master/spec.md) specification
 - [Visual Studio Code](https://code.visualstudio.com) configuration with [Go](https://code.visualstudio.com/docs/languages/go)
-- (Optional) [Slack](https://slack.com), [Discord](https://discord.com) or [Twitter](https://twitter.com) announcements on new Github Releases
+- (Optional) [Slack](https://slack.com), [Discord](https://discord.com) or [Twitter](https://twitter.com) announcements on new GitHub Releases
 - (Optional) Easily add [contributors](https://allcontributors.org/docs/en/bot/installation) in any Issue or Pull-Request
 
 </details>
@@ -96,7 +96,7 @@ Releases are automatically created when you create a new [git tag](https://git-s
 
 If you want to manually make releases, please install GoReleaser:
 
-[goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to Github and can be installed:
+[goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to GitHub and can be installed:
 - **using make:** `make install-releaser`
 - **using brew:** `brew install goreleaser`
 
@@ -105,7 +105,7 @@ The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](ht
 <br/>
 
 ### Automatic Releases on Tag Creation (recommended)
-Automatic releases via [Github Actions](.github/workflows/release.yml) from creating a new tag:
+Automatic releases via [GitHub Actions](.github/workflows/release.yml) from creating a new tag:
 ```shell
 make tag version=1.2.3
 ```
@@ -143,7 +143,7 @@ install-all-contributors      Installs all contributors locally
 install-go                    Install the application (Using Native Go)
 install-releaser              Install the GoReleaser application
 lint                          Run the golangci-lint application (install if not found)
-release                       Full production release (creates release in Github)
+release                       Full production release (creates release in GitHub)
 release                       Runs common.release then runs godocs
 release-snap                  Test the full release (build binaries)
 release-test                  Full production test release (everything except deploy)
@@ -168,7 +168,7 @@ vet                           Run the Go vet application
 <br/>
 
 ## Examples & Tests
-All unit tests and [examples](examples) run via [Github Actions](https://github.com/mrz1836/go-cachestore/actions) and
+All unit tests and [examples](examples) run via [GitHub Actions](https://github.com/mrz1836/go-cachestore/actions) and
 uses [Go version 1.17.x](https://golang.org/doc/go1.17). View the [configuration file](.github/workflows/run-tests.yml).
 
 <br/>
@@ -227,9 +227,9 @@ Thank you to these wonderful people ([emoji key](https://allcontributors.org/doc
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://mrz1818.com"><img src="https://avatars.githubusercontent.com/u/3743002?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr. Z</b></sub></a><br /><a href="#infra-mrz1836" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/mrz1836/go-cachestore/commits?author=mrz1836" title="Code">💻</a> <a href="#maintenance-mrz1836" title="Maintenance">🚧</a> <a href="#security-mrz1836" title="Security">🛡️</a></td>
-  </tr>
+    <tr>
+        <td align="center"><a href="https://mrz1818.com"><img src="https://avatars.githubusercontent.com/u/3743002?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr. Z</b></sub></a><br /><a href="#infra-mrz1836" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/mrz1836/go-cachestore/commits?author=mrz1836" title="Code">💻</a> <a href="#maintenance-mrz1836" title="Maintenance">🚧</a> <a href="#security-mrz1836" title="Security">🛡️</a></td>
+    </tr>
 </table>
 
 <!-- markdownlint-restore -->
