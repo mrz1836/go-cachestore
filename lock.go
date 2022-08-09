@@ -45,6 +45,36 @@ func (c *Client) WriteLock(ctx context.Context, lockKey string, ttl int64) (stri
 	return secret, nil
 }
 
+// WriteLockWithSecret will create a lock with the given secret with a TTL (seconds) to expire
+// The lockKey is unique and should be deterministic
+// The secret should be unique per instance/process that wants to acquire the lock
+func (c *Client) WriteLockWithSecret(ctx context.Context, lockKey, secret string, ttl int64) (string, error) {
+
+	var err error
+
+	// Test the key and secret
+	if err = validateLockValues(lockKey, secret); err != nil {
+		return "", err
+	}
+
+	// Lock using Redis
+	if c.Engine() == Redis {
+		if _, err = cache.WriteLock(
+			ctx, c.options.redis, lockKey, secret, ttl,
+		); err != nil {
+			return "", errors.Wrap(ErrLockCreateFailed, err.Error())
+		}
+	} else if c.Engine() == FreeCache { // Lock using FreeCache
+		if _, err = writeLockFreeCache(
+			c.options.freeCache, lockKey, secret, ttl,
+		); err != nil {
+			return "", errors.Wrap(ErrLockCreateFailed, err.Error())
+		}
+	}
+
+	return secret, nil
+}
+
 // WaitWriteLock will aggressively try to make a lock until the TTW (in seconds) is reached
 func (c *Client) WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int64) (string, error) {
 
