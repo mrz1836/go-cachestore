@@ -39,7 +39,7 @@ func loadFreeCache(cacheSize, percent int) (c *freecache.Cache) {
 // writeLockFreeCache will write a lock record into memory using a secret and expiration
 //
 // ttl is in seconds
-func writeLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string, ttl int64) (bool, error) {
+func writeLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string, ttl int64) (bool, error) { //nolint:unparam // bool is not being used yet
 
 	// Try to get an existing lock (if it fails, make a new lock)
 	lockKeyBytes := []byte(lockKey)
