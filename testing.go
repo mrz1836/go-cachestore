@@ -14,10 +14,10 @@ import (
 
 // loadMockRedis will load a mocked redis connection
 func loadMockRedis(
-	idleTimeout time.Duration, // nolint: unparam // same param but for testing
-	maxConnTime time.Duration, // nolint: unparam // same param but for testing
-	maxActive int, // nolint: unparam // same param but for testing
-	maxIdle int, // nolint: unparam // same param but for testing
+	idleTimeout time.Duration, //nolint:unparam // same param but for testing
+	maxConnTime time.Duration, //nolint:unparam // same param but for testing
+	maxActive int, //nolint:unparam // same param but for testing
+	maxIdle int, //nolint:unparam // same param but for testing
 ) (client *cache.Client, conn *redigomock.Conn) {
 	conn = redigomock.NewConn()
 	client = &cache.Client{
