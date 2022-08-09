@@ -66,6 +66,79 @@ func TestClient_WriteLock(t *testing.T) {
 	// todo: add redis lock tests
 }
 
+// TestClient_WriteLockWithSecret will test the method WriteLockWithSecret()
+func TestClient_WriteLockWithSecret(t *testing.T) {
+
+	testCases := getInMemoryTestCases(t)
+	for _, testCase := range testCases {
+		t.Run(testCase.name+" - missing lock key", func(t *testing.T) {
+			var secret string
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			secret, err = c.WriteLockWithSecret(context.Background(), "", "", 30)
+			assert.Equal(t, "", secret)
+			assert.Error(t, err)
+			assert.ErrorAs(t, err, &ErrKeyRequired)
+		})
+
+		t.Run(testCase.name+" - valid lock", func(t *testing.T) {
+			var secret string
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
+			assert.Equal(t, 6, len(secret))
+			assert.NoError(t, err)
+
+			defer func() {
+				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
+			}()
+		})
+
+		t.Run(testCase.name+" - lock conflict", func(t *testing.T) {
+			var secret string
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
+			assert.Equal(t, 6, len(secret))
+			assert.NoError(t, err)
+
+			defer func() {
+				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
+			}()
+
+			// Lock exists with different secret
+			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret2", 30)
+			assert.Equal(t, "", secret)
+			assert.ErrorAs(t, err, &ErrLockExists)
+		})
+
+		t.Run(testCase.name+" - update lock ttl", func(t *testing.T) {
+			var secret string
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
+			assert.Equal(t, 6, len(secret))
+			assert.NoError(t, err)
+
+			defer func() {
+				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
+			}()
+
+			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
+			assert.Equal(t, 6, len(secret))
+			assert.NoError(t, err)
+		})
+	}
+}
+
 // TestClient_ReleaseLock will test the method ReleaseLock()
 func TestClient_ReleaseLock(t *testing.T) {
 

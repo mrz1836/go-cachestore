@@ -13,6 +13,7 @@ type LockService interface {
 	ReleaseLock(ctx context.Context, lockKey, secret string) (bool, error)
 	WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int64) (string, error)
 	WriteLock(ctx context.Context, lockKey string, ttl int64) (string, error)
+	WriteLockWithSecret(ctx context.Context, lockKey, secret string, ttl int64) (string, error)
 }
 
 // CacheService are the cache related methods
