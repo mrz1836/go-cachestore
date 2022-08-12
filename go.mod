@@ -3,7 +3,7 @@ module github.com/mrz1836/go-cachestore
 go 1.17
 
 require (
-	github.com/alicebob/miniredis/v2 v2.22.0
+	github.com/alicebob/miniredis/v2 v2.23.0
 	github.com/coocood/freecache v1.2.2
 	github.com/gomodule/redigo v1.8.9
 	github.com/mrz1836/go-cache v0.7.2
