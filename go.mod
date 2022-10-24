@@ -11,7 +11,7 @@ require (
 	github.com/newrelic/go-agent/v3 v3.19.2
 	github.com/pkg/errors v0.9.1
 	github.com/rafaeljusto/redigomock v2.4.0+incompatible
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 )
 
 require (
