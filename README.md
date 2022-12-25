@@ -2,7 +2,7 @@
 > Simple cache access & storage layer using [Redis](https://redis.io/) or [FreeCache](https://github.com/coocood/freecache)
 
 [![Release](https://img.shields.io/github/release-pre/mrz1836/go-cachestore.svg?logo=github&style=flat&v=2)](https://github.com/mrz1836/go-cachestore/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-cachestore/run-go-tests?logo=github&v=2)](https://github.com/mrz1836/go-cachestore/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/mrz1836/go-cachestore/run-tests.yml?branch=master&logo=github&v=2)](https://github.com/mrz1836/go-cachestore/actions)
 [![Report](https://goreportcard.com/badge/github.com/mrz1836/go-cachestore?style=flat&v=2)](https://goreportcard.com/report/github.com/mrz1836/go-cachestore)
 [![codecov](https://codecov.io/gh/mrz1836/go-cachestore/branch/master/graph/badge.svg?v=2)](https://codecov.io/gh/mrz1836/go-cachestore)
 [![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/mrz1836/go-cachestore&style=flat&v=2)](https://mergify.io)
