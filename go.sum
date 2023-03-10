@@ -29,8 +29,8 @@ github.com/mrz1836/go-cache v0.8.0 h1:+vBuTa9+aQ5rBj5c3pHFECOzTbQ6ocyo36UdFKrSFp
 github.com/mrz1836/go-cache v0.8.0/go.mod h1:J/dAcNjByP33eIo/h2U3JnL+B9iAifS1PiVqQTz9fLY=
 github.com/mrz1836/go-logger v0.3.2 h1:bjd23NwVaLWncXgXAyxAwWLQ02of0Ci3iJIZZEakkFU=
 github.com/mrz1836/go-logger v0.3.2/go.mod h1:8gWPdqxOAFNJOHDXS2ducgsokUOf0wWtAAM3LXPrhYo=
-github.com/newrelic/go-agent/v3 v3.20.3 h1:hUBAMq/Y2Y9as5/yxQbf0zNde/X7w58cWZkm2flZIaw=
-github.com/newrelic/go-agent/v3 v3.20.3/go.mod h1:rT6ZUxJc5rQbWLyCtjqQCOcfb01lKRFbc1yMQkcboWM=
+github.com/newrelic/go-agent/v3 v3.20.4 h1:fkxr0oUEYrPeXyfJC0D0BwDs1FYMe4NgUSqnzqPESI0=
+github.com/newrelic/go-agent/v3 v3.20.4/go.mod h1:rT6ZUxJc5rQbWLyCtjqQCOcfb01lKRFbc1yMQkcboWM=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
