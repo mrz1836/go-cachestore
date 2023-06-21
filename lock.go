@@ -96,9 +96,8 @@ func (c *Client) WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int
 			ctx, lockKey, ttl,
 		); len(secret) > 0 || time.Now().After(end) {
 			break
-		} else {
-			time.Sleep(lockRetrySleepTime)
 		}
+		time.Sleep(lockRetrySleepTime)
 	}
 
 	// No secret, lock creating failed or did not complete

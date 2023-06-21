@@ -27,10 +27,10 @@ const (
 
 // genericStruct is an example struct for testing
 type genericStruct struct {
-	BoolField   bool
-	FloatField  float64
-	IntField    int
-	StringField string
+	BoolField   bool    `json:"bool_field"`
+	FloatField  float64 `json:"float_field"`
+	IntField    int     `json:"int_field"`
+	StringField string  `json:"string_field"`
 }
 
 // newMockRedisClient will create a new redis mock client
