@@ -6,7 +6,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.30.5
 	github.com/coocood/freecache v1.2.4
 	github.com/gomodule/redigo v1.8.9
-	github.com/mrz1836/go-cache v0.8.3
+	github.com/mrz1836/go-cache v0.8.4
 	github.com/mrz1836/go-logger v0.3.2
 	github.com/newrelic/go-agent/v3 v3.26.0
 	github.com/pkg/errors v0.9.1

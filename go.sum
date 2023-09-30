@@ -29,8 +29,8 @@ github.com/klauspost/compress v1.17.0/go.mod h1:ntbaceVETuRiXiv4DpjP66DpAtAGkEQs
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
-github.com/mrz1836/go-cache v0.8.3 h1:saPdVkjDBLsiMmHa6wxawbYdD8uy8Myd2lJ/YAK7RrU=
-github.com/mrz1836/go-cache v0.8.3/go.mod h1:xPxiYRhi21/4/mcRlM9d4EpOgXSiZn1oHwwq4GUk0BI=
+github.com/mrz1836/go-cache v0.8.4 h1:XNctN+cMAy3cXONzaCaaG/BZIvnrScrrVQmRuDhGpsI=
+github.com/mrz1836/go-cache v0.8.4/go.mod h1:BfjqD9MW7+k/MWyMic4Yeb07VicEZ1HrOiQ0zqGsJL8=
 github.com/mrz1836/go-logger v0.3.2 h1:bjd23NwVaLWncXgXAyxAwWLQ02of0Ci3iJIZZEakkFU=
 github.com/mrz1836/go-logger v0.3.2/go.mod h1:8gWPdqxOAFNJOHDXS2ducgsokUOf0wWtAAM3LXPrhYo=
 github.com/newrelic/go-agent/v3 v3.26.0 h1:xJkqiQgLtC3ys5zoBxD91ITm7sVHZNEF+7/mqmFjnl0=
