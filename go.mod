@@ -1,12 +1,12 @@
 module github.com/mrz1836/go-cachestore
 
-go 1.18
+go 1.19
 
 require (
 	github.com/alicebob/miniredis/v2 v2.31.0
 	github.com/coocood/freecache v1.2.4
 	github.com/gomodule/redigo v1.8.9
-	github.com/mrz1836/go-cache v0.8.5
+	github.com/mrz1836/go-cache v0.9.0
 	github.com/mrz1836/go-logger v0.3.2
 	github.com/newrelic/go-agent/v3 v3.26.0
 	github.com/pkg/errors v0.9.1
