@@ -31,8 +31,8 @@ github.com/mrz1836/go-cache v0.9.2 h1:pQK3SJg6kfbn43oKW68R3qCWRILKSvSHs3qvwn8OzH
 github.com/mrz1836/go-cache v0.9.2/go.mod h1:IphLH8lmLdSI5N+8MswFEaqP1bJQ8800CxXre5nJD4M=
 github.com/mrz1836/go-logger v0.3.2 h1:bjd23NwVaLWncXgXAyxAwWLQ02of0Ci3iJIZZEakkFU=
 github.com/mrz1836/go-logger v0.3.2/go.mod h1:8gWPdqxOAFNJOHDXS2ducgsokUOf0wWtAAM3LXPrhYo=
-github.com/newrelic/go-agent/v3 v3.28.0 h1:zrDJpU6wp84VvU0uUM0ExuSFSRGcKfPvw4WMEnBgIMo=
-github.com/newrelic/go-agent/v3 v3.28.0/go.mod h1:qKzHfnXvk2XM0iOkBLMmeNckhUd4AGlI66vliWxp/Wk=
+github.com/newrelic/go-agent/v3 v3.28.1 h1:jJfangbTvuLsP+zWZo2EafACbZ9xvZfdDM8Ly15cPpo=
+github.com/newrelic/go-agent/v3 v3.28.1/go.mod h1:9utrgxlSryNqRrTvII2XBL+0lpofXbqXApvVWPpbzUg=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
