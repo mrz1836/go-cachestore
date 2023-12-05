@@ -77,13 +77,13 @@ func TestClient_SetRedis(t *testing.T) {
 		setCmd := conn.Command(cache.SetCommand, testKey, exampleString).Expect(exampleString)
 		err := client.Set(ctx, testKey, exampleString)
 		require.NoError(t, err)
-		assert.Equal(t, true, setCmd.Called)
+		assert.True(t, setCmd.Called)
 
 		// Get command
 		getCmd := conn.Command(cache.GetCommand, testKey).Expect(exampleString)
 		getExample, err2 := client.Get(ctx, testKey)
 		require.NoError(t, err2)
-		assert.Equal(t, true, getCmd.Called)
+		assert.True(t, getCmd.Called)
 
 		assert.Equal(t, exampleString, getExample)
 	})
@@ -155,8 +155,8 @@ func TestClient_SetModelRedis(t *testing.T) {
 		getExample := new(genericStruct)
 		err = c.GetModel(ctx, testKey, getExample)
 		require.NoError(t, err)
-		assert.Equal(t, true, getExample.BoolField)
-		assert.Equal(t, 123.123, getExample.FloatField)
+		assert.True(t, getExample.BoolField)
+		assert.InDelta(t, 123.123, getExample.FloatField, 0)
 		assert.Equal(t, 123, getExample.IntField)
 		assert.Equal(t, "string", getExample.StringField)
 	})
@@ -173,8 +173,8 @@ func TestClient_Get(t *testing.T) {
 			require.NoError(t, err)
 
 			_, err = c.Get(context.Background(), "")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
@@ -183,8 +183,8 @@ func TestClient_Get(t *testing.T) {
 			require.NoError(t, err)
 
 			_, err = c.Get(context.Background(), "   ")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - key not found (nil)", func(t *testing.T) {
@@ -229,7 +229,7 @@ func TestClient_Get(t *testing.T) {
 
 		_, err := c.Get(context.Background(), "")
 		require.Error(t, err)
-		assert.ErrorIs(t, err, ErrKeyRequired)
+		require.ErrorIs(t, err, ErrKeyRequired)
 	})
 
 	t.Run("["+Redis.String()+"] [mock] - valid key", func(t *testing.T) {
@@ -241,7 +241,7 @@ func TestClient_Get(t *testing.T) {
 		err := c.Set(context.Background(), testKey, testValue)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, setCmd.Called)
+		assert.True(t, setCmd.Called)
 
 		// The main command to test
 		getCmd := conn.Command(cache.GetCommand, testKey).Expect(testValue)
@@ -251,7 +251,7 @@ func TestClient_Get(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, testValue, val.(string))
 
-		assert.Equal(t, true, getCmd.Called)
+		assert.True(t, getCmd.Called)
 	})
 }
 
@@ -266,8 +266,8 @@ func TestClient_Set(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.Set(context.Background(), "", "")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
@@ -276,8 +276,8 @@ func TestClient_Set(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.Set(context.Background(), "   ", "")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid key", func(t *testing.T) {
@@ -316,8 +316,8 @@ func TestClient_Set(t *testing.T) {
 		c, _ := newMockRedisClient(t)
 
 		err := c.Set(context.Background(), "", "")
-		assert.Error(t, err)
-		assert.ErrorIs(t, err, ErrKeyRequired)
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrKeyRequired)
 	})
 
 	t.Run("["+Redis.String()+"] [mock] - valid key", func(t *testing.T) {
@@ -329,7 +329,7 @@ func TestClient_Set(t *testing.T) {
 		err := c.Set(context.Background(), testKey, testValue)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, setCmd.Called)
+		assert.True(t, setCmd.Called)
 	})
 }
 
@@ -344,8 +344,8 @@ func TestClient_Delete(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.Delete(context.Background(), "")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
@@ -354,8 +354,8 @@ func TestClient_Delete(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.Delete(context.Background(), "   ")
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid key", func(t *testing.T) {
@@ -405,8 +405,8 @@ func TestClient_Delete(t *testing.T) {
 		c, _ := newMockRedisClient(t)
 
 		err := c.Delete(context.Background(), "")
-		assert.Error(t, err)
-		assert.ErrorIs(t, err, ErrKeyRequired)
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrKeyRequired)
 	})
 
 	t.Run("["+Redis.String()+"] [mock] - valid key", func(t *testing.T) {
@@ -418,7 +418,7 @@ func TestClient_Delete(t *testing.T) {
 		err := c.Delete(context.Background(), testKey)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, delCmd.Called)
+		assert.True(t, delCmd.Called)
 	})
 }
 
@@ -441,8 +441,8 @@ func TestClient_GetModel(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.GetModel(context.Background(), "", testModelEmpty)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
@@ -452,8 +452,8 @@ func TestClient_GetModel(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.GetModel(context.Background(), "   ", testModelEmpty)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid key", func(t *testing.T) {
@@ -474,7 +474,7 @@ func TestClient_GetModel(t *testing.T) {
 			assert.Equal(t, testModel.StringField, testModelEmpty.StringField)
 			assert.Equal(t, testModel.IntField, testModelEmpty.IntField)
 			assert.Equal(t, testModel.BoolField, testModelEmpty.BoolField)
-			assert.Equal(t, testModel.FloatField, testModelEmpty.FloatField)
+			assert.InDelta(t, testModel.FloatField, testModelEmpty.FloatField, 0)
 		})
 
 		t.Run(testCase.name+" - record does not exist", func(t *testing.T) {
@@ -485,7 +485,7 @@ func TestClient_GetModel(t *testing.T) {
 
 			err = c.GetModel(context.Background(), testKey, testModelEmpty)
 			require.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyNotFound)
+			require.ErrorIs(t, err, ErrKeyNotFound)
 			assert.NotEqual(t, testModel.StringField, testModelEmpty.StringField)
 		})
 	}
@@ -495,8 +495,8 @@ func TestClient_GetModel(t *testing.T) {
 		c, _ := newMockRedisClient(t)
 
 		err := c.GetModel(context.Background(), "", testModelEmpty)
-		assert.Error(t, err)
-		assert.ErrorIs(t, err, ErrKeyRequired)
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrKeyRequired)
 	})
 
 	t.Run("["+Redis.String()+"] [mock] - record does not exist", func(t *testing.T) {
@@ -506,9 +506,9 @@ func TestClient_GetModel(t *testing.T) {
 		getCmd := conn.Command(cache.GetCommand, testKey).Expect(nil)
 
 		err := c.GetModel(context.Background(), testKey, testModelEmpty)
-		assert.Error(t, err)
-		assert.ErrorIs(t, err, ErrKeyNotFound)
-		assert.Equal(t, true, getCmd.Called)
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrKeyNotFound)
+		assert.True(t, getCmd.Called)
 	})
 
 	t.Run("["+Redis.String()+"] [mock] - record exists", func(t *testing.T) {
@@ -522,13 +522,13 @@ func TestClient_GetModel(t *testing.T) {
 
 		err = c.SetModel(context.Background(), testKey, testModel, 0)
 		require.NoError(t, err)
-		assert.Equal(t, true, setCmd.Called)
+		assert.True(t, setCmd.Called)
 
 		getCmd := conn.Command(cache.GetCommand, testKey).Expect(responseBytes)
 
 		err = c.GetModel(context.Background(), testKey, testModelEmpty)
 		require.NoError(t, err)
-		assert.Equal(t, true, getCmd.Called)
+		assert.True(t, getCmd.Called)
 
 		assert.Equal(t, testModel.StringField, testModelEmpty.StringField)
 	})
@@ -552,8 +552,8 @@ func TestClient_SetModel(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.SetModel(context.Background(), "", testModel, 0)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
@@ -562,8 +562,8 @@ func TestClient_SetModel(t *testing.T) {
 			require.NoError(t, err)
 
 			err = c.Set(context.Background(), "   ", testModel)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid key", func(t *testing.T) {
@@ -591,7 +591,7 @@ func TestClient_SetModel(t *testing.T) {
 		err = c.SetModel(context.Background(), testKey, testModel, 0)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, setCmd.Called)
+		assert.True(t, setCmd.Called)
 	})
 }
 

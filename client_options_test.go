@@ -19,7 +19,7 @@ func TestDefaultClientOptions(t *testing.T) {
 		defaults := defaultClientOptions()
 		require.NotNil(t, defaults)
 		assert.Equal(t, Empty, defaults.engine)
-		assert.Equal(t, false, defaults.newRelicEnabled)
+		assert.False(t, defaults.newRelicEnabled)
 		assert.Nil(t, defaults.redis)
 		require.NotNil(t, defaults.redisConfig)
 	})
@@ -60,7 +60,7 @@ func TestWithNewRelic(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, c.IsNewRelicEnabled())
+		assert.True(t, c.IsNewRelicEnabled())
 	})
 }
 
@@ -78,7 +78,7 @@ func TestWithDebugging(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 	})
 }
 
@@ -95,7 +95,7 @@ func TestWithRedis(t *testing.T) {
 		opts := []ClientOps{WithDebugging(), WithRedis(config)}
 		c, err := NewClient(context.Background(), opts...)
 		assert.Nil(t, c)
-		assert.Error(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("apply basic local config", func(t *testing.T) {
@@ -169,7 +169,7 @@ func TestWithRedisConnection(t *testing.T) {
 		opts := []ClientOps{WithDebugging(), WithRedisConnection(nil)}
 		c, err := NewClient(context.Background(), opts...)
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, FreeCache, c.Engine())
 	})
 

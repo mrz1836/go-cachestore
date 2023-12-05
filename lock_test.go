@@ -23,8 +23,8 @@ func TestClient_WriteLock(t *testing.T) {
 
 			secret, err = c.WriteLock(context.Background(), "", 30)
 			assert.Equal(t, "", secret)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid lock", func(t *testing.T) {
@@ -34,8 +34,8 @@ func TestClient_WriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
@@ -49,8 +49,8 @@ func TestClient_WriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
@@ -59,7 +59,7 @@ func TestClient_WriteLock(t *testing.T) {
 			// Lock exists with different secret
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
 			assert.Equal(t, "", secret)
-			assert.ErrorAs(t, err, &ErrLockExists)
+			require.ErrorAs(t, err, &ErrLockExists)
 		})
 	}
 
@@ -79,8 +79,8 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 
 			secret, err = c.WriteLockWithSecret(context.Background(), "", "", 30)
 			assert.Equal(t, "", secret)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - valid lock", func(t *testing.T) {
@@ -90,8 +90,8 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
-			assert.Equal(t, 6, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 6)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
@@ -105,8 +105,8 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
-			assert.Equal(t, 6, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 6)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
@@ -115,7 +115,7 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 			// Lock exists with different secret
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret2", 30)
 			assert.Equal(t, "", secret)
-			assert.ErrorAs(t, err, &ErrLockExists)
+			require.ErrorAs(t, err, &ErrLockExists)
 		})
 
 		t.Run(testCase.name+" - update lock ttl", func(t *testing.T) {
@@ -125,16 +125,16 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
-			assert.Equal(t, 6, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 6)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(context.Background(), testKey, secret)
 			}()
 
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret", 30)
-			assert.Equal(t, 6, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 6)
+			require.NoError(t, err)
 		})
 	}
 }
@@ -151,9 +151,9 @@ func TestClient_ReleaseLock(t *testing.T) {
 			require.NoError(t, err)
 
 			success, err = c.ReleaseLock(context.Background(), "", "some-value")
-			assert.Equal(t, false, success)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrKeyRequired)
+			assert.False(t, success)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - missing secret", func(t *testing.T) {
@@ -163,9 +163,9 @@ func TestClient_ReleaseLock(t *testing.T) {
 			require.NoError(t, err)
 
 			success, err = c.ReleaseLock(context.Background(), testKey, "")
-			assert.Equal(t, false, success)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrSecretRequired)
+			assert.False(t, success)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrSecretRequired)
 		})
 
 		t.Run(testCase.name+" - valid release", func(t *testing.T) {
@@ -176,12 +176,12 @@ func TestClient_ReleaseLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			success, err = c.ReleaseLock(context.Background(), testKey, secret)
-			assert.Equal(t, true, success)
-			assert.NoError(t, err)
+			assert.True(t, success)
+			require.NoError(t, err)
 		})
 
 		t.Run(testCase.name+" - invalid secret", func(t *testing.T) {
@@ -192,13 +192,13 @@ func TestClient_ReleaseLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			success, err = c.ReleaseLock(context.Background(), testKey, secret+"-bad-key")
-			assert.Equal(t, false, success)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, cache.ErrLockMismatch)
+			require.Error(t, err)
+			require.ErrorIs(t, err, cache.ErrLockMismatch)
+			assert.False(t, success)
 		})
 	}
 
@@ -221,8 +221,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 
 			secret, err = c.WaitWriteLock(ctx, "", 30, 10)
 			assert.Equal(t, "", secret)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrKeyRequired)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrKeyRequired)
 		})
 
 		t.Run(testCase.name+" - missing ttw", func(t *testing.T) {
@@ -234,8 +234,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 30, 0)
 			assert.Equal(t, "", secret)
-			assert.Error(t, err)
-			assert.ErrorAs(t, err, &ErrTTWCannotBeEmpty)
+			require.Error(t, err)
+			require.ErrorAs(t, err, &ErrTTWCannotBeEmpty)
 		})
 
 		t.Run(testCase.name+" - valid lock", func(t *testing.T) {
@@ -246,8 +246,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 30, 5)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(ctx, testKey, secret)
@@ -262,8 +262,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 2, 5)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(ctx, testKey, secret)
@@ -272,8 +272,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			testCase.FastForward(6 * time.Second)
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 10, 5)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(ctx, testKey, secret)
@@ -288,8 +288,8 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 30, 5)
-			assert.Equal(t, 64, len(secret))
-			assert.NoError(t, err)
+			assert.Len(t, secret, 64)
+			require.NoError(t, err)
 
 			defer func() {
 				_, _ = c.ReleaseLock(ctx, testKey, secret)
@@ -297,7 +297,7 @@ func TestClient_WaitWriteLock(t *testing.T) {
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 10, 2)
 			assert.Equal(t, "", secret)
-			assert.Error(t, err)
+			require.Error(t, err)
 		})
 	}
 }

@@ -29,7 +29,7 @@ func TestRandomHex(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			output, err := RandomHex(test.input)
 			require.NoError(t, err)
-			assert.Equal(t, test.expectedLength, len(output))
+			assert.Len(t, output, test.expectedLength)
 		})
 	}
 

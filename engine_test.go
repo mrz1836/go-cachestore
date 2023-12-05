@@ -20,11 +20,11 @@ func TestEngine_String(t *testing.T) {
 func TestEngine_IsEmpty(t *testing.T) {
 	t.Run("test empty engine", func(t *testing.T) {
 		e := Empty
-		assert.Equal(t, true, e.IsEmpty())
+		assert.True(t, e.IsEmpty())
 	})
 
 	t.Run("test regular engine", func(t *testing.T) {
 		e := Redis
-		assert.Equal(t, false, e.IsEmpty())
+		assert.False(t, e.IsEmpty())
 	})
 }

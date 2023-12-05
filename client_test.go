@@ -17,16 +17,16 @@ func TestNewClient(t *testing.T) {
 		t.Run(testCase.name+" - basic client", func(t *testing.T) {
 			c, err := NewClient(context.Background(), testCase.opts)
 			assert.NotNil(t, c)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, testCase.engine, c.Engine())
 		})
 
 		t.Run(testCase.name+" - basic client, debugging", func(t *testing.T) {
 			c, err := NewClient(context.Background(), WithDebugging(), testCase.opts)
 			assert.NotNil(t, c)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, testCase.engine, c.Engine())
-			assert.Equal(t, true, c.IsDebug())
+			assert.True(t, c.IsDebug())
 		})
 
 		t.Run(testCase.name+" - basic client, new relic", func(t *testing.T) {
@@ -34,9 +34,9 @@ func TestNewClient(t *testing.T) {
 
 			c, err := NewClient(ctx, WithNewRelic(), testCase.opts)
 			assert.NotNil(t, c)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, testCase.engine, c.Engine())
-			assert.Equal(t, true, c.IsNewRelicEnabled())
+			assert.True(t, c.IsNewRelicEnabled())
 
 			c.Close(ctx)
 			assert.Equal(t, Empty, c.Engine())
@@ -46,7 +46,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("empty client, no options, defaults to FreeCache", func(t *testing.T) {
 		c, err := NewClient(context.Background())
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, FreeCache, c.Engine())
 	})
 
@@ -56,7 +56,7 @@ func TestNewClient(t *testing.T) {
 			WithDebugging(),
 		)
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, FreeCache, c.Engine())
 	})
 
@@ -66,7 +66,7 @@ func TestNewClient(t *testing.T) {
 			WithDebugging(),
 		)
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, FreeCache, c.Engine())
 	})
 
@@ -78,7 +78,7 @@ func TestNewClient(t *testing.T) {
 			WithDebugging(),
 		)
 		assert.Nil(t, c)
-		assert.Error(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("["+Redis.String()+"] - load mocked redis connection", func(t *testing.T) {
@@ -92,7 +92,7 @@ func TestNewClient(t *testing.T) {
 			WithDebugging(),
 		)
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, Redis, c.Engine())
 	})
 
@@ -108,7 +108,7 @@ func TestNewClient(t *testing.T) {
 			WithDebugging(),
 		)
 		assert.NotNil(t, c)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	})
 }
 
@@ -173,11 +173,11 @@ func TestClient_Debug(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, false, c.IsDebug())
+		assert.False(t, c.IsDebug())
 
 		c.Debug(true)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 	})
 
 	t.Run("["+Redis.String()+"] - turn debug on", func(t *testing.T) {
@@ -192,11 +192,11 @@ func TestClient_Debug(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, false, c.IsDebug())
+		assert.False(t, c.IsDebug())
 
 		c.Debug(true)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 	})
 
 	t.Run("["+FreeCache.String()+"] - turn debug off", func(t *testing.T) {
@@ -204,11 +204,11 @@ func TestClient_Debug(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 
 		c.Debug(false)
 
-		assert.Equal(t, false, c.IsDebug())
+		assert.False(t, c.IsDebug())
 	})
 }
 
@@ -221,11 +221,11 @@ func TestClient_IsDebug(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, false, c.IsDebug())
+		assert.False(t, c.IsDebug())
 
 		c.Debug(true)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 	})
 
 	t.Run("["+Redis.String()+"] - check debug", func(t *testing.T) {
@@ -240,11 +240,11 @@ func TestClient_IsDebug(t *testing.T) {
 		require.NotNil(t, c)
 		require.NoError(t, err)
 
-		assert.Equal(t, false, c.IsDebug())
+		assert.False(t, c.IsDebug())
 
 		c.Debug(true)
 
-		assert.Equal(t, true, c.IsDebug())
+		assert.True(t, c.IsDebug())
 	})
 }
 
