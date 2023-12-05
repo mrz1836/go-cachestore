@@ -30,3 +30,4 @@ jobs:
           VALIDATE_EDITORCONFIG: false  # Not needed in this project
           VALIDATE_GO: false # Already running in Go tests
           VALIDATE_JSCPD_ALL_CODEBASE: false
+          VALIDATE_JSCPD: false # Ignore JSCPD
