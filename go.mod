@@ -7,7 +7,7 @@ require (
 	github.com/coocood/freecache v1.2.4
 	github.com/gomodule/redigo v1.8.9
 	github.com/mrz1836/go-cache v0.9.4
-	github.com/mrz1836/go-logger v0.3.2
+	github.com/mrz1836/go-logger v0.3.3
 	github.com/newrelic/go-agent/v3 v3.29.1
 	github.com/pkg/errors v0.9.1
 	github.com/rafaeljusto/redigomock v2.4.0+incompatible
@@ -22,8 +22,8 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240205150955-31a09d347014 // indirect
 	google.golang.org/grpc v1.61.0 // indirect
