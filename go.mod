@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/coocood/freecache v1.2.4
-	github.com/gomodule/redigo v1.9.1
+	github.com/gomodule/redigo v1.9.2
 	github.com/mrz1836/go-cache v0.9.5
 	github.com/mrz1836/go-logger v0.3.3
 	github.com/newrelic/go-agent/v3 v3.30.0
