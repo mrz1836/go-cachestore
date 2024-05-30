@@ -32,3 +32,4 @@ jobs:
           VALIDATE_JSCPD_ALL_CODEBASE: false
           VALIDATE_JSCPD: false # Ignore JSCPD
           VALIDATE_CHECKOV: false
+          VALIDATE_GO_MODULES: false # This is already done in the golangci-lint
