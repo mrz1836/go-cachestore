@@ -22,6 +22,7 @@ type CacheService interface {
 	Get(ctx context.Context, key string) (string, error)
 	GetModel(ctx context.Context, key string, model interface{}) error
 	Set(ctx context.Context, key string, value interface{}, dependencies ...string) error
+	SetTTL(ctx context.Context, key string, value interface{}, ttl time.Duration, dependencies ...string) error
 	SetModel(ctx context.Context, key string, model interface{}, ttl time.Duration, dependencies ...string) error
 }
 

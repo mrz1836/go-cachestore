@@ -38,6 +38,29 @@ func (c *Client) Set(ctx context.Context, key string, value interface{}, depende
 	return c.options.freeCache.Set([]byte(key), []byte(value.(string)), 0)
 }
 
+// SetTTL will set a key->value using the current engine with a TTL
+//
+// NOTE: redis only supports dependency keys at this time
+// Value should be used as a string for best results
+func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl time.Duration, dependencies ...string) error {
+
+	// Sanitize the key (trailing or leading spaces)
+	key = strings.TrimSpace(key)
+
+	// Require a key to be present
+	if len(key) == 0 {
+		return ErrKeyRequired
+	}
+
+	// Redis
+	if c.Engine() == Redis {
+		return cache.SetExp(ctx, c.options.redis, key, value, ttl, dependencies...)
+	}
+
+	// FreeCache
+	return c.options.freeCache.Set([]byte(key), []byte(value.(string)), int(ttl.Seconds()))
+}
+
 // Get will return a value from a given key
 //
 // Redis will be an interface{} but really a string (empty string)

@@ -333,6 +333,112 @@ func TestClient_Set(t *testing.T) {
 	})
 }
 
+// TestClient_SetTTL will test the method SetTLL()
+func TestClient_SetTTL(t *testing.T) {
+
+	testCases := getInMemoryTestCases(t)
+	ttl := 1 * time.Minute
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name+" - empty key", func(t *testing.T) {
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			err = c.SetTTL(context.Background(), "", "", ttl)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
+		})
+
+		t.Run(testCase.name+" - just spaces", func(t *testing.T) {
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			err = c.SetTTL(context.Background(), "   ", "", ttl)
+			require.Error(t, err)
+			require.ErrorIs(t, err, ErrKeyRequired)
+		})
+
+		t.Run(testCase.name+" - valid key", func(t *testing.T) {
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			defer func() {
+				_ = c.EmptyCache(context.Background())
+			}()
+
+			err = c.SetTTL(context.Background(), testKey, "", ttl)
+			require.NoError(t, err)
+		})
+
+		t.Run(testCase.name+" - valid key, with leading and trailing spaces", func(t *testing.T) {
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			defer func() {
+				_ = c.EmptyCache(context.Background())
+			}()
+
+			err = c.SetTTL(context.Background(), " "+testKey+" ", testValue, ttl)
+			require.NoError(t, err)
+
+			var val interface{}
+			val, err = c.Get(context.Background(), testKey)
+			require.NoError(t, err)
+			assert.Equal(t, testValue, val.(string))
+		})
+
+		t.Run(testCase.name+" - check that key expires", func(t *testing.T) {
+			c, err := NewClient(context.Background(), testCase.opts)
+			require.NotNil(t, c)
+			require.NoError(t, err)
+
+			defer func() {
+				_ = c.EmptyCache(context.Background())
+			}()
+
+			shortTTL := 1 * time.Second
+
+			err = c.SetTTL(context.Background(), "test-ttl", "test", shortTTL)
+			require.NoError(t, err)
+
+			testCase.FastForward(2 * time.Second)
+
+			// Wait enough time for the key to expire
+			time.Sleep(2 * time.Second)
+
+			// Check the key is empty
+			var val interface{}
+			val, err = c.Get(context.Background(), "test-ttl")
+			require.NoError(t, err)
+			assert.Equal(t, "", val.(string))
+		})
+	}
+
+	t.Run("["+Redis.String()+"] [mock] - empty key", func(t *testing.T) {
+		c, _ := newMockRedisClient(t)
+
+		err := c.SetTTL(context.Background(), "", "", ttl)
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrKeyRequired)
+	})
+
+	t.Run("["+Redis.String()+"] [mock] - valid key", func(t *testing.T) {
+		c, conn := newMockRedisClient(t)
+
+		// Mock the redis string
+		setCmd := conn.Command(cache.SetExpirationCommand, testKey, int64(ttl.Seconds()), testValue).Expect(testValue)
+
+		err := c.SetTTL(context.Background(), testKey, testValue, ttl)
+		require.NoError(t, err)
+
+		assert.True(t, setCmd.Called)
+	})
+}
+
 // TestClient_Delete will test the method Delete()
 func TestClient_Delete(t *testing.T) {
 
