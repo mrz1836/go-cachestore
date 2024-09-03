@@ -63,7 +63,7 @@ This repository was created using [MrZ's `go-template`](https://github.com/mrz18
 - Generic templates for [Issues and Pull Requests](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository) in GitHub
 - All standard GitHub files such as `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`
 - Code [ownership configuration](.github/CODEOWNERS) for GitHub
-- All your ignore files for [vs-code](.editorconfig), [docker](.dockerignore) and [git](.gitignore)
+- All your ignore files for [Visual Studio Code](.editorconfig), [docker](.dockerignore) and [Git](.gitignore)
 - Automatic sync for [labels](.github/labels.yml) into GitHub using a predefined [configuration](.github/labels.yml)
 - Built-in powerful merging rules using [Mergify](https://mergify.io/)
 - Welcome [new contributors](.github/mergify.yml) on their first Pull-Request
@@ -92,7 +92,7 @@ This repository was created using [MrZ's `go-template`](https://github.com/mrz18
 <summary><strong><code>Library Deployment</code></strong></summary>
 <br/>
 
-Releases are automatically created when you create a new [git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging)!
+Releases are automatically created when you create a new [Git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging)!
 
 If you want to manually make releases, please install GoReleaser:
 
