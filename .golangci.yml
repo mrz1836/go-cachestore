@@ -330,7 +330,7 @@ linters:
     - err113 # requires a lot of fixes for errors with wrapping
     - gomoddirectives # we use replace as needed
     - nilnil # we do not conform to this
-    - testifylint # not ready
+    #- testifylint # not ready
     #- contextcheck # having issues with this
   disable-all: false
   presets:
