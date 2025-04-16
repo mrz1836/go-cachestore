@@ -1,3 +1,4 @@
+// Package main shows how to use freecache with the caching library
 package main
 
 import (

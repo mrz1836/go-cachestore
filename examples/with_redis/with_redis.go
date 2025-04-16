@@ -1,3 +1,4 @@
+// Package main shows how to use redis with the caching library
 package main
 
 import (

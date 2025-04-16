@@ -1,3 +1,4 @@
+// Package main shows how to create a new client
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Package main shows how to use the debugging feature of the caching library
 package main
 
 import (
