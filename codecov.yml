@@ -19,9 +19,8 @@ coverage:
 ignore:
   - "*/.make/.*"
   - "*/.github/.*"
-  - "*/examples/.*"
-  - "*/examples/*"
-  - "*/tools/.*"
+  - "examples/**"
+  - ".vscode/**"
 
 # Parsers
 # --------------
