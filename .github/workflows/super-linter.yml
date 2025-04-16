@@ -35,3 +35,4 @@ jobs:
           VALIDATE_GO_MODULES: false # This is already done in the golangci-lint
           VALIDATE_YAML_PRETTIER: false # Not needed in this project
           VALIDATE_MARKDOWN_PRETTIER: false # Not needed in this project
+          VALIDATE_JSON_PRETTIER: false # Not needed in this project
