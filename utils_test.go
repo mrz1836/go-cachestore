@@ -1,7 +1,6 @@
 package cachestore
 
 import (
-	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -23,7 +22,6 @@ func TestRandomHex(t *testing.T) {
 		{"16->32", 16, 32},
 		{"32->64", 32, 64},
 		{"8->16", 8, 16},
-		// {"math.MaxInt32", math.MaxInt32, 4294967294},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -33,10 +31,16 @@ func TestRandomHex(t *testing.T) {
 		})
 	}
 
-	t.Run("panic - max int64", func(t *testing.T) {
+	t.Run("panic with a negative", func(t *testing.T) {
 		assert.Panics(t, func() {
-			_, err := RandomHex(math.MaxInt64)
+			_, err := RandomHex(-1)
 			require.Error(t, err)
 		})
+	})
+
+	t.Run("log an example", func(t *testing.T) {
+		output, err := RandomHex(32)
+		require.NoError(t, err)
+		t.Log(output)
 	})
 }

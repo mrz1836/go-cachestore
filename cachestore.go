@@ -17,7 +17,7 @@ import (
 
 // Set will set a key->value using the current engine
 //
-// NOTE: redis only supports dependency keys at this time
+// ATTENTION: redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) Set(ctx context.Context, key string, value interface{}, dependencies ...string) error {
 
@@ -40,7 +40,7 @@ func (c *Client) Set(ctx context.Context, key string, value interface{}, depende
 
 // SetTTL will set a key->value using the current engine with a TTL
 //
-// NOTE: redis only supports dependency keys at this time
+// ATTENTION: redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl time.Duration, dependencies ...string) error {
 
@@ -120,7 +120,7 @@ func (c *Client) Delete(ctx context.Context, key string) error {
 // SetModel will set any model or struct (parsing Model->JSON (bytes))
 //
 // Model needs to be a pointer to a struct
-// NOTE: redis only supports dependency keys at this time
+// ATTENTION: redis only supports dependency keys at this time
 func (c *Client) SetModel(ctx context.Context, key string, model interface{},
 	ttl time.Duration, dependencies ...string) error {
 

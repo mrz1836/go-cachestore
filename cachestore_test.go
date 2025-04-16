@@ -202,7 +202,7 @@ func TestClient_Get(t *testing.T) {
 			var val interface{}
 			val, err = c.Get(context.Background(), testKey)
 			require.NoError(t, err)
-			assert.Equal(t, "", val)
+			assert.Empty(t, val)
 		})
 
 		t.Run(testCase.name+" - valid key", func(t *testing.T) {
@@ -414,7 +414,7 @@ func TestClient_SetTTL(t *testing.T) {
 			var val interface{}
 			val, err = c.Get(context.Background(), "test-ttl")
 			require.NoError(t, err)
-			assert.Equal(t, "", val.(string))
+			assert.Empty(t, val.(string))
 		})
 	}
 
@@ -482,7 +482,7 @@ func TestClient_Delete(t *testing.T) {
 			var val string
 			val, err = c.Get(context.Background(), testKey)
 			require.NoError(t, err)
-			assert.Equal(t, "", val)
+			assert.Empty(t, val)
 		})
 
 		t.Run(testCase.name+" - valid key, with leading and trailing spaces", func(t *testing.T) {
@@ -503,7 +503,7 @@ func TestClient_Delete(t *testing.T) {
 			var val string
 			val, err = c.Get(context.Background(), testKey)
 			require.NoError(t, err)
-			assert.Equal(t, "", val)
+			assert.Empty(t, val)
 		})
 	}
 

@@ -22,7 +22,7 @@ func TestClient_WriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLock(context.Background(), "", 30)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.Error(t, err)
 			require.EqualError(t, err, ErrKeyRequired.Error())
 		})
@@ -58,7 +58,7 @@ func TestClient_WriteLock(t *testing.T) {
 
 			// Lock exists with different secret
 			secret, err = c.WriteLock(context.Background(), testKey, 30)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.EqualError(t, err, "key is locked with a different secret: failed creating cache lock")
 		})
 	}
@@ -78,7 +78,7 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WriteLockWithSecret(context.Background(), "", "", 30)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.Error(t, err)
 			require.EqualError(t, err, ErrKeyRequired.Error())
 		})
@@ -114,7 +114,7 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 
 			// Lock exists with different secret
 			secret, err = c.WriteLockWithSecret(context.Background(), testKey, "secret2", 30)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.EqualError(t, err, "key is locked with a different secret: failed creating cache lock")
 		})
 
@@ -220,7 +220,7 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WaitWriteLock(ctx, "", 30, 10)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.Error(t, err)
 			require.EqualError(t, err, ErrKeyRequired.Error())
 		})
@@ -233,7 +233,7 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			require.NoError(t, err)
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 30, 0)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.Error(t, err)
 			require.EqualError(t, err, ErrTTWCannotBeEmpty.Error())
 		})
@@ -296,7 +296,7 @@ func TestClient_WaitWriteLock(t *testing.T) {
 			}()
 
 			secret, err = c.WaitWriteLock(ctx, testKey, 10, 2)
-			assert.Equal(t, "", secret)
+			assert.Empty(t, secret)
 			require.Error(t, err)
 		})
 	}
