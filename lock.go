@@ -2,6 +2,7 @@ package cachestore
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/mrz1836/go-cache"
@@ -124,12 +125,12 @@ func (c *Client) ReleaseLock(ctx context.Context, lockKey, secret string) (bool,
 // validateLockValues will validate and test the lock/secret values
 func validateLockValues(lockKey, secret string) error {
 	// Require a key to be present
-	if len(lockKey) == 0 {
+	if len(strings.TrimSpace(lockKey)) == 0 {
 		return ErrKeyRequired
 	}
 
 	// Require a secret to be present
-	if len(secret) == 0 {
+	if len(strings.TrimSpace(secret)) == 0 {
 		return ErrSecretRequired
 	}
 	return nil
