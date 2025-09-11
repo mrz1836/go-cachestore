@@ -63,6 +63,9 @@ outputs:
   redis-trust-service-health:
     description: "Trust GitHub Actions service container health checks (skip redis-cli verification)"
     value: ${{ steps.redis-config.outputs.redis-trust-service-health }}
+  redis-service-mode:
+    description: "Redis service mode (auto, always, never)"
+    value: ${{ steps.redis-config.outputs.redis-service-mode }}
 
 runs:
   using: "composite"
@@ -192,12 +195,14 @@ runs:
         echo "redis-health-timeout=$REDIS_HEALTH_TIMEOUT" >> $GITHUB_OUTPUT
         echo "redis-cache-force-pull=$REDIS_CACHE_FORCE_PULL" >> $GITHUB_OUTPUT
         echo "redis-trust-service-health=$REDIS_TRUST_SERVICE_HEALTH" >> $GITHUB_OUTPUT
+        echo "redis-service-mode=$REDIS_MODE" >> $GITHUB_OUTPUT
 
         # Final configuration summary
         echo ""
         echo "🎯 Final Redis Configuration:"
         if [[ "$REDIS_ENABLED" == "true" ]]; then
           echo "✅ Redis service enabled:"
+          echo "   • Service Mode: $REDIS_MODE"
           echo "   • Detection Method: $DETECTION_METHOD"
           echo "   • Auto-detected: $AUTO_DETECTED"
           echo "   • Version: $REDIS_VERSION"
@@ -210,6 +215,7 @@ runs:
           echo "   • Trust Service Health: $REDIS_TRUST_SERVICE_HEALTH"
         else
           echo "❌ Redis service disabled:"
+          echo "   • Service Mode: $REDIS_MODE"
           echo "   • Detection Method: $DETECTION_METHOD"
           echo "   • Auto-detected: $AUTO_DETECTED"
         fi
