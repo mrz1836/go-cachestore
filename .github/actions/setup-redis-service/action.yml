@@ -54,6 +54,10 @@ inputs:
     description: "Whether to use cached Redis image (true/false)"
     required: false
     default: "true"
+  matrix-os:
+    description: "Matrix OS for consistent cache key generation (e.g., ubuntu-24.04)"
+    required: false
+    default: "ubuntu-24.04"
 
 outputs:
   redis-available:
@@ -103,7 +107,7 @@ runs:
       uses: ./.github/actions/cache-redis-image
       with:
         redis-version: ${{ inputs.redis-version }}
-        runner-os: ${{ runner.os }}
+        runner-os: ${{ inputs.matrix-os }}
         cache-mode: "restore"
 
     # ————————————————————————————————————————————————————————————————

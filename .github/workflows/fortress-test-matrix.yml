@@ -203,6 +203,7 @@ jobs:
           redis-version: ${{ inputs.redis-version }}
           redis-host: ${{ inputs.redis-host }}
           redis-port: ${{ inputs.redis-port }}
+          matrix-os: ${{ matrix.os }}
           use-cache: "true"
 
       # ————————————————————————————————————————————————————————————————

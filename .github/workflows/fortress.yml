@@ -172,6 +172,7 @@ jobs:
           env-json: ${{ needs.load-env.outputs.env-json }}
           redis-enabled: ${{ needs.setup.outputs.redis-enabled }}
           redis-versions: ${{ needs.setup.outputs.redis-version }}
+          redis-cache-force-pull: ${{ needs.setup.outputs.redis-cache-force-pull }}
   # ----------------------------------------------------------------------------------
   # Security Scans
   # ----------------------------------------------------------------------------------

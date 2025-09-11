@@ -154,6 +154,9 @@ on:
       redis-health-timeout:
         description: "Redis health check timeout in seconds"
         value: ${{ jobs.setup-config.outputs.redis-health-timeout }}
+      redis-cache-force-pull:
+        description: "Whether to force pull Redis images even when cached"
+        value: ${{ jobs.setup-config.outputs.redis-cache-force-pull }}
 
 # Security: Restrictive default permissions with job-level overrides for least privilege access
 permissions:
@@ -201,6 +204,7 @@ jobs:
       redis-health-retries: ${{ steps.redis-config.outputs.redis-health-retries }}
       redis-health-interval: ${{ steps.redis-config.outputs.redis-health-interval }}
       redis-health-timeout: ${{ steps.redis-config.outputs.redis-health-timeout }}
+      redis-cache-force-pull: ${{ steps.redis-config.outputs.redis-cache-force-pull }}
 
     steps:
       # ————————————————————————————————————————————————————————————————
