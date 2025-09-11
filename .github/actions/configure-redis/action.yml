@@ -60,6 +60,9 @@ outputs:
   redis-cache-force-pull:
     description: "Whether to force pull Redis images even when cached (true/false)"
     value: ${{ steps.redis-config.outputs.redis-cache-force-pull }}
+  redis-trust-service-health:
+    description: "Trust GitHub Actions service container health checks (skip redis-cli verification)"
+    value: ${{ steps.redis-config.outputs.redis-trust-service-health }}
 
 runs:
   using: "composite"
@@ -92,6 +95,7 @@ runs:
         REDIS_HEALTH_INTERVAL=$(echo "$ENV_JSON" | jq -r '.REDIS_HEALTH_CHECK_INTERVAL // "10"')
         REDIS_HEALTH_TIMEOUT=$(echo "$ENV_JSON" | jq -r '.REDIS_HEALTH_CHECK_TIMEOUT // "5"')
         REDIS_CACHE_FORCE_PULL=$(echo "$ENV_JSON" | jq -r '.REDIS_CACHE_FORCE_PULL // "false"')
+        REDIS_TRUST_SERVICE_HEALTH=$(echo "$ENV_JSON" | jq -r '.REDIS_TRUST_SERVICE_HEALTH // "true"')
 
         echo "📋 Initial Redis Configuration:"
         echo "   • ENABLE_REDIS_SERVICE: $REDIS_ENABLED"
@@ -103,6 +107,7 @@ runs:
         echo "   • REDIS_HEALTH_CHECK_INTERVAL: $REDIS_HEALTH_INTERVAL"
         echo "   • REDIS_HEALTH_CHECK_TIMEOUT: $REDIS_HEALTH_TIMEOUT"
         echo "   • REDIS_CACHE_FORCE_PULL: $REDIS_CACHE_FORCE_PULL"
+        echo "   • REDIS_TRUST_SERVICE_HEALTH: $REDIS_TRUST_SERVICE_HEALTH"
         echo ""
 
         # Initialize detection tracking
@@ -186,6 +191,7 @@ runs:
         echo "redis-health-interval=$REDIS_HEALTH_INTERVAL" >> $GITHUB_OUTPUT
         echo "redis-health-timeout=$REDIS_HEALTH_TIMEOUT" >> $GITHUB_OUTPUT
         echo "redis-cache-force-pull=$REDIS_CACHE_FORCE_PULL" >> $GITHUB_OUTPUT
+        echo "redis-trust-service-health=$REDIS_TRUST_SERVICE_HEALTH" >> $GITHUB_OUTPUT
 
         # Final configuration summary
         echo ""
@@ -201,6 +207,7 @@ runs:
           echo "   • Health Check Interval: ${REDIS_HEALTH_INTERVAL}s"
           echo "   • Health Check Timeout: ${REDIS_HEALTH_TIMEOUT}s"
           echo "   • Cache Force Pull: $REDIS_CACHE_FORCE_PULL"
+          echo "   • Trust Service Health: $REDIS_TRUST_SERVICE_HEALTH"
         else
           echo "❌ Redis service disabled:"
           echo "   • Detection Method: $DETECTION_METHOD"
