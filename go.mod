@@ -1,6 +1,6 @@
 module github.com/mrz1836/go-cachestore
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/alicebob/miniredis/v2 v2.34.0
