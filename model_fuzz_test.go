@@ -449,9 +449,9 @@ func FuzzModelSize(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key string, stringSize, arraySize int) {
 		ctx := context.Background()
 
-		// Limit sizes to prevent excessive memory usage
-		if stringSize > 10000 || arraySize > 1000 {
-			t.Skip("Skipping large sizes")
+		// Limit sizes to prevent excessive memory usage and handle negative values
+		if stringSize < 0 || arraySize < 0 || stringSize > 10000 || arraySize > 1000 {
+			t.Skip("Skipping invalid or large sizes")
 		}
 
 		client, err := NewClient(ctx, WithFreeCache())
