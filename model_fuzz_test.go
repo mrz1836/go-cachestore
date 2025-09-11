@@ -402,7 +402,21 @@ func FuzzModelTypeConsistency(f *testing.F) {
 
 		// JSON unmarshaling might change types (e.g., all numbers become float64)
 		// So we verify the values can be converted back
-		if retrieved["string_field"] != stringVal {
+
+		// Handle UTF-8 validation for string fields - JSON replaces invalid UTF-8 with replacement character
+		if !utf8.ValidString(stringVal) {
+			// If original contains invalid UTF-8, get expected result by marshaling/unmarshaling
+			testData := map[string]interface{}{"string_field": stringVal}
+			jsonBytes, marshalErr := json.Marshal(testData)
+			if marshalErr == nil {
+				var expectedData map[string]interface{}
+				if json.Unmarshal(jsonBytes, &expectedData) == nil {
+					if retrieved["string_field"] != expectedData["string_field"] {
+						t.Errorf("String field with invalid UTF-8 not properly sanitized: got %v, expected %v", retrieved["string_field"], expectedData["string_field"])
+					}
+				}
+			}
+		} else if retrieved["string_field"] != stringVal {
 			t.Errorf("String field mismatch: got %v, expected %s", retrieved["string_field"], stringVal)
 		}
 
