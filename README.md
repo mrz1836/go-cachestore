@@ -99,8 +99,6 @@ go get github.com/mrz1836/go-cachestore
 ## Documentation
 View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-cachestore)
 
-[![GoDoc](https://godoc.org/github.com/mrz1836/go-cachestore?status.svg&style=flat&v=2)](https://pkg.go.dev/github.com/mrz1836/go-cachestore)
-
 <details>
 <summary><strong><code>Development Setup (Getting Started)</code></strong></summary>
 <br/>
