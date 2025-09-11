@@ -138,7 +138,9 @@ runs:
         INSTALLATION_METHOD="unknown"
 
         # Check if we should trust service container health checks
-        if [[ "${{ inputs.trust-service-health }}" == "true" ]]; then
+        TRUST_SERVICE_HEALTH="${{ inputs.trust-service-health }}"
+        TRUST_SERVICE_HEALTH=$(echo "$TRUST_SERVICE_HEALTH" | xargs)  # Trim whitespace
+        if [[ "$TRUST_SERVICE_HEALTH" == "true" ]]; then
           echo "✅ Trusting GitHub Actions service container health checks"
           echo "🔗 Skipping redis-cli installation and verification"
 
