@@ -203,7 +203,20 @@ func FuzzComplexModelSerialization(f *testing.F) {
 			t.Errorf("Tags length mismatch: got %d, expected %d", len(retrieved.Tags), len(model.Tags))
 		} else {
 			for i, tag := range model.Tags {
-				if retrieved.Tags[i] != tag {
+				// Handle JSON's UTF-8 sanitization for tag strings
+				if !utf8.ValidString(tag) {
+					// If original contains invalid UTF-8, get expected result by marshaling/unmarshaling
+					testTags := []string{tag}
+					jsonBytes, marshalErr := json.Marshal(testTags)
+					if marshalErr == nil {
+						var expectedTags []string
+						if json.Unmarshal(jsonBytes, &expectedTags) == nil && len(expectedTags) > 0 {
+							if retrieved.Tags[i] != expectedTags[0] {
+								t.Errorf("Tag[%d] with invalid UTF-8 not properly sanitized: got %q, expected %q", i, retrieved.Tags[i], expectedTags[0])
+							}
+						}
+					}
+				} else if retrieved.Tags[i] != tag {
 					t.Errorf("Tag[%d] mismatch: got %q, expected %q", i, retrieved.Tags[i], tag)
 				}
 			}

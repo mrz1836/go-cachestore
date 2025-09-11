@@ -134,7 +134,7 @@ func (c *Client) SetModel(ctx context.Context, key string, model interface{},
 	}
 
 	// Parse into JSON
-	responseBytes, err := json.Marshal(&model)
+	responseBytes, err := json.Marshal(model)
 	if err != nil {
 		return err
 	}
