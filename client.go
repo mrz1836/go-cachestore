@@ -33,7 +33,6 @@ type (
 // If no options are given, it will use the defaultClientOptions()
 // ctx may contain a NewRelic txn (or one will be created)
 func NewClient(ctx context.Context, opts ...ClientOps) (ClientInterface, error) {
-
 	// Create a new client with defaults
 	client := &Client{options: defaultClientOptions()}
 
@@ -58,7 +57,6 @@ func NewClient(ctx context.Context, opts ...ClientOps) (ClientInterface, error) 
 
 	// Load cache based on engine
 	if client.Engine() == Redis {
-
 		// Only if we don't already have an existing client
 		if client.options.redis == nil {
 			var err error
@@ -69,7 +67,6 @@ func NewClient(ctx context.Context, opts ...ClientOps) (ClientInterface, error) 
 			}
 		}
 	} else if client.Engine() == FreeCache {
-
 		// Only if we don't already have an existing client
 		if client.options.freeCache == nil {
 			client.options.freeCache = loadFreeCache(DefaultCacheSize, DefaultGCPercent)

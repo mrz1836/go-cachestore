@@ -8,7 +8,6 @@ import (
 
 // TestEngine_String will test the method String()
 func TestEngine_String(t *testing.T) {
-
 	t.Run("test all engine names", func(t *testing.T) {
 		assert.Equal(t, "empty", Empty.String())
 		assert.Equal(t, "redis", Redis.String())

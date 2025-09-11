@@ -48,7 +48,6 @@ func TestClientOptions_GetTxnCtx(t *testing.T) {
 
 // TestWithNewRelic will test the method WithNewRelic()
 func TestWithNewRelic(t *testing.T) {
-
 	t.Run("get opts", func(t *testing.T) {
 		opt := WithNewRelic()
 		assert.IsType(t, *new(ClientOps), opt)
@@ -66,7 +65,6 @@ func TestWithNewRelic(t *testing.T) {
 
 // TestWithDebugging will test the method WithDebugging()
 func TestWithDebugging(t *testing.T) {
-
 	t.Run("get opts", func(t *testing.T) {
 		opt := WithDebugging()
 		assert.IsType(t, *new(ClientOps), opt)
@@ -84,7 +82,6 @@ func TestWithDebugging(t *testing.T) {
 
 // TestWithRedis will test the method WithRedis()
 func TestWithRedis(t *testing.T) {
-
 	t.Run("get opts", func(t *testing.T) {
 		opt := WithRedis(nil)
 		assert.IsType(t, *new(ClientOps), opt)
@@ -99,7 +96,6 @@ func TestWithRedis(t *testing.T) {
 	})
 
 	t.Run("apply basic local config", func(t *testing.T) {
-
 		if testing.Short() {
 			t.Skip("skipping live local redis tests")
 		}
@@ -117,7 +113,6 @@ func TestWithRedis(t *testing.T) {
 	})
 
 	t.Run("missing redis prefix", func(t *testing.T) {
-
 		if testing.Short() {
 			t.Skip("skipping live local redis tests")
 		}
@@ -135,7 +130,6 @@ func TestWithRedis(t *testing.T) {
 	})
 
 	t.Run("apply verbose config", func(t *testing.T) {
-
 		if testing.Short() {
 			t.Skip("skipping live local redis tests")
 		}
@@ -200,7 +194,6 @@ func TestWithFreeCache(t *testing.T) {
 	})
 
 	t.Run("use the default configuration", func(t *testing.T) {
-
 		opts := []ClientOps{WithDebugging(), WithFreeCache()}
 		c, err := NewClient(context.Background(), opts...)
 		require.NotNil(t, c)
@@ -219,7 +212,6 @@ func TestWithFreeCacheConnection(t *testing.T) {
 	})
 
 	t.Run("use an existing connection", func(t *testing.T) {
-
 		freeClient := loadFreeCache(DefaultCacheSize, DefaultGCPercent)
 
 		opts := []ClientOps{WithDebugging(), WithFreeCacheConnection(freeClient)}

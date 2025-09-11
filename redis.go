@@ -14,7 +14,6 @@ func loadRedisClient(
 	config *RedisConfig,
 	newRelicEnabled bool,
 ) (*cache.Client, error) {
-
 	// Check for a config
 	if config == nil || config.URL == "" {
 		return nil, ErrInvalidRedisConfig

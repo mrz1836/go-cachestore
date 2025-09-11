@@ -12,7 +12,6 @@ import (
 // The lockKey is unique and should be deterministic
 // The secret will be automatically generated and stored in the locked key (returned)
 func (c *Client) WriteLock(ctx context.Context, lockKey string, ttl int64) (string, error) {
-
 	var secret string
 	var err error
 
@@ -49,7 +48,6 @@ func (c *Client) WriteLock(ctx context.Context, lockKey string, ttl int64) (stri
 // The lockKey is unique and should be deterministic
 // The secret should be unique per instance/process that wants to acquire the lock
 func (c *Client) WriteLockWithSecret(ctx context.Context, lockKey, secret string, ttl int64) (string, error) {
-
 	var err error
 
 	// Test the key and secret
@@ -77,7 +75,6 @@ func (c *Client) WriteLockWithSecret(ctx context.Context, lockKey, secret string
 
 // WaitWriteLock will aggressively try to make a lock until the TTW (in seconds) is reached
 func (c *Client) WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int64) (string, error) {
-
 	var secret string
 
 	// Test the values
@@ -110,7 +107,6 @@ func (c *Client) WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int
 
 // ReleaseLock will release a given lock key only if the secret matches
 func (c *Client) ReleaseLock(ctx context.Context, lockKey, secret string) (bool, error) {
-
 	// Test the key and secret
 	if err := validateLockValues(lockKey, secret); err != nil {
 		return false, err
@@ -127,7 +123,6 @@ func (c *Client) ReleaseLock(ctx context.Context, lockKey, secret string) (bool,
 
 // validateLockValues will validate and test the lock/secret values
 func validateLockValues(lockKey, secret string) error {
-
 	// Require a key to be present
 	if len(lockKey) == 0 {
 		return ErrKeyRequired

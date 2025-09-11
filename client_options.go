@@ -18,7 +18,6 @@ type ClientOps func(c *clientOptions)
 //
 // Useful for starting with the default and then modifying as needed
 func defaultClientOptions() *clientOptions {
-
 	// Set the default options
 	return &clientOptions{
 		debug:           false,
@@ -57,7 +56,6 @@ func WithDebugging() ClientOps {
 // WithRedis will set the redis configuration
 func WithRedis(redisConfig *RedisConfig) ClientOps {
 	return func(c *clientOptions) {
-
 		// Don't panic if nil is passed
 		if redisConfig == nil {
 			return

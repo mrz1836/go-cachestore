@@ -89,7 +89,6 @@ func TestClient_SetRedis(t *testing.T) {
 	})
 
 	t.Run("["+Redis.String()+"] [in-memory] valid get/set using redis", func(t *testing.T) {
-
 		r := loadRedisInMemoryClient(t)
 		require.NotNil(t, r)
 		ctx := context.Background()
@@ -164,7 +163,6 @@ func TestClient_SetModelRedis(t *testing.T) {
 
 // TestClient_Get will test the method Get()
 func TestClient_Get(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - empty key", func(t *testing.T) {
@@ -257,7 +255,6 @@ func TestClient_Get(t *testing.T) {
 
 // TestClient_Set will test the method Set()
 func TestClient_Set(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - empty key", func(t *testing.T) {
@@ -335,7 +332,6 @@ func TestClient_Set(t *testing.T) {
 
 // TestClient_SetTTL will test the method SetTLL()
 func TestClient_SetTTL(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	ttl := 1 * time.Minute
 
@@ -441,7 +437,6 @@ func TestClient_SetTTL(t *testing.T) {
 
 // TestClient_Delete will test the method Delete()
 func TestClient_Delete(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - empty key", func(t *testing.T) {
@@ -530,7 +525,6 @@ func TestClient_Delete(t *testing.T) {
 
 // TestClient_GetModel will test the method GetModel()
 func TestClient_GetModel(t *testing.T) {
-
 	testModel := &genericStruct{
 		StringField: testValue,
 		IntField:    123,
@@ -642,7 +636,6 @@ func TestClient_GetModel(t *testing.T) {
 
 // TestClient_SetModel will test the method SetModel()
 func TestClient_SetModel(t *testing.T) {
-
 	testModel := &genericStruct{
 		StringField: testValue,
 		IntField:    123,

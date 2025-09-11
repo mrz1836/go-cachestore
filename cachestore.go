@@ -20,7 +20,6 @@ import (
 // ATTENTION: redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) Set(ctx context.Context, key string, value interface{}, dependencies ...string) error {
-
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 
@@ -43,7 +42,6 @@ func (c *Client) Set(ctx context.Context, key string, value interface{}, depende
 // ATTENTION: redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl time.Duration, dependencies ...string) error {
-
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 
@@ -65,7 +63,6 @@ func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl 
 //
 // Redis will be an interface{} but really a string (empty string)
 func (c *Client) Get(ctx context.Context, key string) (string, error) {
-
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 
@@ -97,7 +94,6 @@ func (c *Client) Get(ctx context.Context, key string) (string, error) {
 
 // Delete will remove a key from the cache
 func (c *Client) Delete(ctx context.Context, key string) error {
-
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 
@@ -122,8 +118,8 @@ func (c *Client) Delete(ctx context.Context, key string) error {
 // Model needs to be a pointer to a struct
 // ATTENTION: redis only supports dependency keys at this time
 func (c *Client) SetModel(ctx context.Context, key string, model interface{},
-	ttl time.Duration, dependencies ...string) error {
-
+	ttl time.Duration, dependencies ...string,
+) error {
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 
@@ -151,7 +147,6 @@ func (c *Client) SetModel(ctx context.Context, key string, model interface{},
 //
 // Model needs to be a pointer to a struct
 func (c *Client) GetModel(ctx context.Context, key string, model interface{}) error {
-
 	// Sanitize the key (trailing or leading spaces)
 	key = strings.TrimSpace(key)
 

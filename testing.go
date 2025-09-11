@@ -85,7 +85,6 @@ func getNewRelicApp(appName string) (*newrelic.Application, error) {
 
 // getNewRelicCtx will return a dummy ctx
 func getNewRelicCtx(t *testing.T, appName, txnName string) context.Context {
-
 	// Load new relic (dummy)
 	newRelic, err := getNewRelicApp(appName)
 	require.NoError(t, err)

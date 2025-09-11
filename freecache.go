@@ -21,7 +21,6 @@ const (
 //
 // This is a default cache solution for running a local single server.
 func loadFreeCache(cacheSize, percent int) (c *freecache.Cache) {
-
 	// Set the defaults for cache size
 	if cacheSize <= 0 {
 		cacheSize = DefaultCacheSize
@@ -62,7 +61,6 @@ func writeLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string
 
 // releaseLockFreeCache will attempt to release a lock if it exists and matches the given secret
 func releaseLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string) (bool, error) {
-
 	// Try to get an existing lock (if it fails, lock does not exist)
 	lockKeyBytes := []byte(lockKey)
 	data, err := freeCacheClient.Get(lockKeyBytes)

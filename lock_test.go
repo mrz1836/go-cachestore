@@ -12,7 +12,6 @@ import (
 
 // TestClient_WriteLock will test the method WriteLock()
 func TestClient_WriteLock(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - missing lock key", func(t *testing.T) {
@@ -68,7 +67,6 @@ func TestClient_WriteLock(t *testing.T) {
 
 // TestClient_WriteLockWithSecret will test the method WriteLockWithSecret()
 func TestClient_WriteLockWithSecret(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - missing lock key", func(t *testing.T) {
@@ -141,7 +139,6 @@ func TestClient_WriteLockWithSecret(t *testing.T) {
 
 // TestClient_ReleaseLock will test the method ReleaseLock()
 func TestClient_ReleaseLock(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 		t.Run(testCase.name+" - missing lock key", func(t *testing.T) {
@@ -207,7 +204,6 @@ func TestClient_ReleaseLock(t *testing.T) {
 
 // TestClient_WaitWriteLock will test the method WaitWriteLock()
 func TestClient_WaitWriteLock(t *testing.T) {
-
 	testCases := getInMemoryTestCases(t)
 	for _, testCase := range testCases {
 
