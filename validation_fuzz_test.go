@@ -279,6 +279,10 @@ func FuzzStringLength(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
+		if valueLen < 0 {
+			t.Skip("Skipping negative value length")
+		}
+
 		client, err := NewClient(ctx, WithFreeCache())
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
