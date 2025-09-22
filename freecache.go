@@ -32,7 +32,7 @@ func loadFreeCache(cacheSize, percent int) (c *freecache.Cache) {
 		percent = DefaultGCPercent
 	}
 	debug.SetGCPercent(percent)
-	return
+	return c
 }
 
 // writeLockFreeCache will write a lock record into memory using a secret and expiration
