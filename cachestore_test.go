@@ -718,5 +718,5 @@ func getInMemoryTestCases(t *testing.T) (cases []cacheTestCase) {
 			URL:                   r.Addr(),
 		}),
 	})
-	return
+	return cases
 }

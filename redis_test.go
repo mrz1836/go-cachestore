@@ -74,5 +74,5 @@ func loadRedisInMemoryClient(t *testing.T) (s *miniredis.Miniredis) {
 	t.Cleanup(func() {
 		s.FlushAll()
 	})
-	return
+	return s
 }

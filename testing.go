@@ -38,7 +38,7 @@ func loadMockRedis(
 		},
 		ScriptsLoaded: nil,
 	}
-	return
+	return client, conn
 }
 
 // loadRealRedis will load a real redis connection
@@ -62,11 +62,11 @@ func loadRealRedis(
 		dependency,
 		newRelic,
 	); err != nil {
-		return
+		return nil, nil, err
 	}
 
 	conn, err = client.GetConnectionWithContext(ctx)
-	return
+	return client, conn, err
 }
 
 // getNewRelicApp will return a dummy new relic app
