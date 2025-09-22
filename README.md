@@ -14,7 +14,7 @@
     <tr>
       <td valign="top" align="left">
         <a href="https://github.com/mrz1836/go-cachestore/releases">
-          <img src="https://img.shields.io/github/release-pre/mrz1836/go-cachestore?logo=github&style=flat" alt="Latest release">
+          <img src="https://img.shields.io/github/release-pre/mrz1836/go-cachestore?logo=github&style=flat&v=1" alt="Latest release">
         </a><br/>
         <a href="https://github.com/mrz1836/go-cachestore/actions">
           <img src="https://img.shields.io/github/actions/workflow/status/mrz1836/go-cachestore/fortress.yml?branch=master&logo=github&style=flat" alt="Build status">
