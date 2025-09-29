@@ -8,7 +8,7 @@ require (
 	github.com/gomodule/redigo v1.9.2
 	github.com/mrz1836/go-cache v1.0.2
 	github.com/mrz1836/go-logger v1.0.0
-	github.com/newrelic/go-agent/v3 v3.40.1
+	github.com/newrelic/go-agent/v3 v3.41.0
 	github.com/pkg/errors v0.9.1
 	github.com/rafaeljusto/redigomock v2.4.0+incompatible
 	github.com/stretchr/testify v1.11.1
