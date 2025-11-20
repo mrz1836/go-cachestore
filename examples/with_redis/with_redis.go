@@ -5,8 +5,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/mrz1836/go-cachestore"
 	"github.com/mrz1836/go-logger"
+
+	"github.com/mrz1836/go-cachestore"
 )
 
 func main() {
