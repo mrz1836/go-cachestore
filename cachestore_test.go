@@ -696,14 +696,14 @@ func TestClient_SetModel(t *testing.T) {
 
 // getInMemoryTestCases will return all the cache engine test cases for in-memory testing
 func getInMemoryTestCases(t *testing.T) (cases []cacheTestCase) {
-	cases = []cacheTestCase{
-		{
-			name:   "[" + FreeCache.String() + "] [in-memory]",
-			engine: FreeCache,
-			opts:   WithFreeCache(),
-			redis:  nil,
-		},
-	}
+	cases = make([]cacheTestCase, 0, 2)
+
+	cases = append(cases, cacheTestCase{
+		name:   "[" + FreeCache.String() + "] [in-memory]",
+		engine: FreeCache,
+		opts:   WithFreeCache(),
+		redis:  nil,
+	})
 
 	r := loadRedisInMemoryClient(t)
 	require.NotNil(t, r)
