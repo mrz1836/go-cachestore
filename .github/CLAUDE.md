@@ -75,7 +75,7 @@ magex audit:report      # Security audit
 - Uses GitHub Actions with fortress.yml workflow
 - CodeQL security analysis
 - Dependabot auto-merge
-- Multi-version Go testing (Go 1.24+)
+- Multi-version Go testing (Go 1.25+)
 
 ## File Structure
 
