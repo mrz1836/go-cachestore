@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/alicebob/miniredis/v2 v2.37.0
-	github.com/coocood/freecache v1.2.5
+	github.com/coocood/freecache v1.2.7
 	github.com/gomodule/redigo v1.9.3
 	github.com/mrz1836/go-cache v1.1.3
 	github.com/mrz1836/go-logger v1.0.4
