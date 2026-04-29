@@ -99,13 +99,16 @@ func FuzzRedisConfig(f *testing.F) {
 	})
 }
 
-// FuzzNewClientWithOptions tests client creation with various option combinations
+// FuzzNewClientWithOptions tests client creation with various option combinations.
+// Redis is intentionally excluded because fuzzing CI has no Redis server, and the
+// dial timeout exceeds Go's per-execution fuzz deadline. Redis option construction
+// is covered by FuzzRedisConfig.
 func FuzzNewClientWithOptions(f *testing.F) {
 	// Seed corpus with different option combinations
-	f.Add(true, "freecache") // debug on, freecache
-	f.Add(false, "redis")    // debug off, redis
-	f.Add(true, "")          // debug on, no engine
-	f.Add(false, "invalid")  // debug off, invalid engine
+	f.Add(true, "freecache")  // debug on, freecache
+	f.Add(false, "freecache") // debug off, freecache
+	f.Add(true, "")           // debug on, no engine (defaults to freecache)
+	f.Add(false, "invalid")   // debug off, invalid engine
 
 	f.Fuzz(func(t *testing.T, debug bool, engineStr string) {
 		ctx := context.Background()
@@ -117,26 +120,21 @@ func FuzzNewClientWithOptions(f *testing.F) {
 			opts = append(opts, WithDebugging())
 		}
 
-		// Add engine option if provided
-		if engineStr != "" {
-			switch strings.ToLower(engineStr) {
-			case "freecache":
-				opts = append(opts, WithFreeCache())
-			case "redis":
-				opts = append(opts, WithRedis(&RedisConfig{URL: "redis://localhost:6379"}))
-			}
+		// Only exercise in-memory engine paths to keep fuzz iterations
+		// hermetic and within the per-execution deadline.
+		if strings.EqualFold(engineStr, "freecache") {
+			opts = append(opts, WithFreeCache())
 		}
 
-		// Test client creation
-		client, err := NewClient(ctx, opts...)
-		// Redis connections might fail, which is acceptable
-		if err != nil {
-			if strings.Contains(strings.ToLower(engineStr), "redis") {
-				t.Logf("Redis client creation failed as expected: %v", err)
-				return
+		// Test that client creation and basic operations don't panic
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Client operations panicked: %v", r)
 			}
+		}()
 
-			// For other engines, unexpected failures should be logged
+		client, err := NewClient(ctx, opts...)
+		if err != nil {
 			t.Logf("Client creation failed: %v", err)
 			return
 		}
@@ -150,13 +148,6 @@ func FuzzNewClientWithOptions(f *testing.F) {
 		if client.IsDebug() != debug {
 			t.Errorf("Client debug mode %v doesn't match expected %v", client.IsDebug(), debug)
 		}
-
-		// Test basic operations don't panic
-		defer func() {
-			if r := recover(); r != nil {
-				t.Errorf("Client operations panicked: %v", r)
-			}
-		}()
 
 		engine := client.Engine()
 		_ = engine.String()
