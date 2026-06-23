@@ -27,8 +27,8 @@ github.com/mrz1836/go-cache v1.1.10 h1:so8OmoLd1cAlmLENRmksSJaBWHbfgnOWQh+zRBHaN
 github.com/mrz1836/go-cache v1.1.10/go.mod h1:D+mhXRRBqfUCKS23zzXbaaa1EbtVgb/GsRlm6AB5Gas=
 github.com/mrz1836/go-logger v1.0.6 h1:5eGbtlMEX/5DDUyESTTqzbOggWTuCNkLGJ/CxJpo0Y4=
 github.com/mrz1836/go-logger v1.0.6/go.mod h1:4OX+yIkLiY4rcM26gZJZjly/f7fyhOEiRVHecZSyTTs=
-github.com/newrelic/go-agent/v3 v3.43.3 h1:0A6DkUBYK2bidV6jJDJ1SD2XkRlg976nl+SiEqkGTUQ=
-github.com/newrelic/go-agent/v3 v3.43.3/go.mod h1:MFXnCId5xXMIJI6A/kbkg0DO48EVTsKcmNijMYphzTg=
+github.com/newrelic/go-agent/v3 v3.44.1 h1:O5DnT3U0cPEian06GL6AXrv4qHoOxvxvAD7shqRGyTQ=
+github.com/newrelic/go-agent/v3 v3.44.1/go.mod h1:5A2u/S0na/zIg5hS197XdK+ZkLqTRq5baFzJfVWrc3Q=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
