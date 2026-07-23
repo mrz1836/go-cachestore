@@ -93,7 +93,8 @@ func TestClient_SetRedis(t *testing.T) {
 		require.NotNil(t, r)
 		ctx := context.Background()
 
-		c, err := NewClient(ctx,
+		c, err := NewClient(
+			ctx,
 			WithRedis(&RedisConfig{
 				URL: r.Addr(),
 			}),
@@ -128,7 +129,8 @@ func TestClient_SetModelRedis(t *testing.T) {
 
 		ctx := context.Background()
 
-		c, err := NewClient(ctx,
+		c, err := NewClient(
+			ctx,
 			WithRedis(&RedisConfig{
 				URL: r.Addr(),
 			}),

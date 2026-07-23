@@ -51,7 +51,8 @@ func TestNewClient(t *testing.T) {
 	})
 
 	t.Run("["+Redis.String()+"] - redis connection is nil", func(t *testing.T) {
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedisConnection(nil),
 			WithDebugging(),
 		)
@@ -61,7 +62,8 @@ func TestNewClient(t *testing.T) {
 	})
 
 	t.Run("["+Redis.String()+"] - redis config is nil", func(t *testing.T) {
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedis(nil),
 			WithDebugging(),
 		)
@@ -71,7 +73,8 @@ func TestNewClient(t *testing.T) {
 	})
 
 	t.Run("["+Redis.String()+"] - bad redis connection", func(t *testing.T) {
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedis(&RedisConfig{
 				URL: RedisPrefix + "localbadhost:1919",
 			}),
@@ -87,7 +90,8 @@ func TestNewClient(t *testing.T) {
 		)
 		assert.NotNil(t, redisClient)
 
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedisConnection(redisClient),
 			WithDebugging(),
 		)
@@ -101,7 +105,8 @@ func TestNewClient(t *testing.T) {
 			t.Skip("skipping test: redis is required")
 		}
 
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedis(&RedisConfig{
 				URL: testLocalConnectionURL,
 			}),
@@ -117,7 +122,8 @@ func TestClient_Close(t *testing.T) {
 	// t.Parallel()
 
 	t.Run("["+FreeCache.String()+"] - load connection and close", func(t *testing.T) {
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithFreeCache(), WithDebugging(),
 		)
 		require.NotNil(t, c)
@@ -150,7 +156,8 @@ func TestClient_Close(t *testing.T) {
 		require.NoError(t, err)
 
 		var c ClientInterface
-		c, err = NewClient(context.Background(),
+		c, err = NewClient(
+			context.Background(),
 			WithRedisConnection(redisClient),
 			WithDebugging(),
 		)
@@ -186,7 +193,8 @@ func TestClient_Debug(t *testing.T) {
 		)
 		require.NotNil(t, redisClient)
 
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedisConnection(redisClient),
 		)
 		require.NotNil(t, c)
@@ -234,7 +242,8 @@ func TestClient_IsDebug(t *testing.T) {
 		)
 		require.NotNil(t, redisClient)
 
-		c, err := NewClient(context.Background(),
+		c, err := NewClient(
+			context.Background(),
 			WithRedisConnection(redisClient),
 		)
 		require.NotNil(t, c)
