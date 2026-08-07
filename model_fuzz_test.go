@@ -32,6 +32,8 @@ type NestedModel struct {
 
 // FuzzSetGetModel tests SetModel/GetModel with various model types and data
 func FuzzSetGetModel(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various model scenarios
 	f.Add("model1", int64(60), 123, "test name", true, int64(1609459200), "metadata1")
 	f.Add("model2", int64(300), 0, "", false, int64(0), "")
@@ -46,7 +48,7 @@ func FuzzSetGetModel(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -137,6 +139,8 @@ func FuzzSetGetModel(f *testing.F) {
 
 // FuzzComplexModelSerialization tests complex nested structures
 func FuzzComplexModelSerialization(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with complex model variations
 	f.Add("complex1", 1.5, "tag1", "tag2", "setting1", "value1", int64(30))
 	f.Add("complex2", -999.99, "", "", "", "", int64(60))
@@ -149,7 +153,7 @@ func FuzzComplexModelSerialization(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -234,6 +238,8 @@ func FuzzComplexModelSerialization(f *testing.F) {
 
 // FuzzModelJSONEdgeCases tests edge cases in JSON serialization
 func FuzzModelJSONEdgeCases(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed with various JSON edge cases
 	f.Add("edge1", `{"id":123,"name":"test"}`)
 	f.Add("edge2", `{"invalid":"json"`)
@@ -245,7 +251,7 @@ func FuzzModelJSONEdgeCases(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, jsonStr string) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -304,6 +310,8 @@ func FuzzModelJSONEdgeCases(f *testing.F) {
 
 // FuzzModelNilPointers tests behavior with nil pointers and empty models
 func FuzzModelNilPointers(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed with various nil/empty scenarios
 	f.Add("nil1", true, false)
 	f.Add("nil2", false, true)
@@ -312,7 +320,7 @@ func FuzzModelNilPointers(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key string, useNilModel, useEmptyModel bool) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -363,6 +371,8 @@ func FuzzModelNilPointers(f *testing.F) {
 
 // FuzzModelTypeConsistency tests type consistency across different operations
 func FuzzModelTypeConsistency(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed with different type scenarios
 	f.Add("type1", "string", int64(123), 45.6)
 	f.Add("type2", "", int64(0), 0.0)
@@ -371,7 +381,7 @@ func FuzzModelTypeConsistency(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, stringVal string, intVal int64, floatVal float64) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -440,6 +450,8 @@ func FuzzModelTypeConsistency(f *testing.F) {
 
 // FuzzModelSize tests behavior with various model sizes
 func FuzzModelSize(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed with different size scenarios
 	f.Add("size1", 10, 5)
 	f.Add("size2", 100, 50)
@@ -454,7 +466,7 @@ func FuzzModelSize(f *testing.F) {
 			t.Skip("Skipping invalid or large sizes")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

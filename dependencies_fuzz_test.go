@@ -9,6 +9,8 @@ import (
 
 // FuzzSetWithDependencies tests Set operation with various dependency combinations
 func FuzzSetWithDependencies(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various dependency scenarios
 	f.Add("key1", "value1", "dep1")
 	f.Add("key2", "value2", "")
@@ -24,7 +26,7 @@ func FuzzSetWithDependencies(f *testing.F) {
 		}
 
 		// Test with FreeCache (dependencies are not supported, but should not fail)
-		clientFC, err := newFuzzClient(ctx)
+		clientFC, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create FreeCache client: %v", err)
 		}
@@ -75,6 +77,8 @@ func FuzzSetWithDependencies(f *testing.F) {
 
 // FuzzSetTTLWithDependencies tests SetTTL operation with various dependency combinations
 func FuzzSetTTLWithDependencies(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various TTL and dependency scenarios
 	f.Add("ttl1", "value1", int64(60), "dep1")
 	f.Add("ttl2", "value2", int64(300), "dep2")
@@ -89,7 +93,7 @@ func FuzzSetTTLWithDependencies(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -134,6 +138,8 @@ func FuzzSetTTLWithDependencies(f *testing.F) {
 
 // FuzzDependencyValidation tests dependency parameter validation
 func FuzzDependencyValidation(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various dependency validation scenarios
 	f.Add("key1", "dep1")
 	f.Add("key2", "")
@@ -147,7 +153,7 @@ func FuzzDependencyValidation(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -200,6 +206,8 @@ func FuzzDependencyValidation(f *testing.F) {
 
 // FuzzDependencyEdgeCases tests edge cases in dependency handling
 func FuzzDependencyEdgeCases(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with edge cases
 	f.Add("key1", "dep")
 	f.Add("key2", "")
@@ -212,7 +220,7 @@ func FuzzDependencyEdgeCases(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -257,6 +265,8 @@ func FuzzDependencyEdgeCases(f *testing.F) {
 
 // FuzzDependencyOrder tests whether dependency order matters
 func FuzzDependencyOrder(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different dependency orders
 	f.Add("order1", "dep1", "dep2", "dep3")
 	f.Add("order2", "dep3", "dep1", "dep2")
@@ -269,7 +279,7 @@ func FuzzDependencyOrder(f *testing.F) {
 			t.Skip("Skipping empty base key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -319,6 +329,8 @@ func FuzzDependencyOrder(f *testing.F) {
 
 // FuzzDuplicateDependencies tests handling of duplicate dependencies
 func FuzzDuplicateDependencies(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with duplicate scenarios
 	f.Add("dup1", "dep")
 	f.Add("dup2", "dependency")
@@ -331,7 +343,7 @@ func FuzzDuplicateDependencies(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -373,6 +385,8 @@ func FuzzDuplicateDependencies(f *testing.F) {
 
 // FuzzDependencyLength tests dependencies with various lengths
 func FuzzDependencyLength(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different dependency lengths
 	f.Add("len1", 1)
 	f.Add("len2", 10)
@@ -386,7 +400,7 @@ func FuzzDependencyLength(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -420,6 +434,8 @@ func FuzzDependencyLength(f *testing.F) {
 
 // FuzzConcurrentDependencies tests concurrent operations with dependencies
 func FuzzConcurrentDependencies(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus for concurrent scenarios
 	f.Add("conc1", "dep1", "dep2")
 	f.Add("conc2", "shared_dep", "unique_dep")
@@ -431,7 +447,7 @@ func FuzzConcurrentDependencies(f *testing.F) {
 			t.Skip("Skipping empty key prefix")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

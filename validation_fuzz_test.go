@@ -49,6 +49,8 @@ func FuzzValidateLockValues(f *testing.F) {
 
 // FuzzKeyTrimming tests key trimming behavior across all operations
 func FuzzKeyTrimming(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various whitespace scenarios
 	f.Add("normalkey", "value")
 	f.Add(" leadingspace", "value")
@@ -64,7 +66,7 @@ func FuzzKeyTrimming(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, value string) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -123,6 +125,8 @@ func FuzzKeyTrimming(f *testing.F) {
 
 // FuzzKeyValidationEdgeCases tests edge cases in key validation
 func FuzzKeyValidationEdgeCases(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various edge cases
 	f.Add("normal")
 	f.Add("")
@@ -143,7 +147,7 @@ func FuzzKeyValidationEdgeCases(f *testing.F) {
 			t.Skip("Skipping extremely long key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -187,6 +191,8 @@ func FuzzKeyValidationEdgeCases(f *testing.F) {
 
 // FuzzUnicodeHandling tests Unicode and special character handling
 func FuzzUnicodeHandling(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various Unicode scenarios
 	f.Add("ascii", "ascii_value")
 	f.Add("café", "café_value")
@@ -204,7 +210,7 @@ func FuzzUnicodeHandling(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -260,6 +266,8 @@ func FuzzUnicodeHandling(f *testing.F) {
 
 // FuzzStringLength tests behavior with various string lengths
 func FuzzStringLength(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various length scenarios
 	f.Add(0, 0)
 	f.Add(1, 1)
@@ -283,7 +291,7 @@ func FuzzStringLength(f *testing.F) {
 			t.Skip("Skipping negative value length")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -317,6 +325,8 @@ func FuzzStringLength(f *testing.F) {
 
 // FuzzSpecialCharacters tests handling of special characters in keys and values
 func FuzzSpecialCharacters(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various special characters
 	f.Add("key:colon", "value:colon")
 	f.Add("key;semicolon", "value;semicolon")
@@ -336,7 +346,7 @@ func FuzzSpecialCharacters(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -375,6 +385,8 @@ func FuzzSpecialCharacters(f *testing.F) {
 
 // FuzzControlCharacters tests handling of control characters
 func FuzzControlCharacters(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with control characters
 	f.Add("key\x00", "value\x00")
 	f.Add("key\x01", "value\x01")
@@ -388,7 +400,7 @@ func FuzzControlCharacters(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

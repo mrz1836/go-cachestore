@@ -60,6 +60,8 @@ func FuzzRandomHex(f *testing.F) {
 
 // FuzzCacheSetGet tests basic cache operations with random data
 func FuzzCacheSetGet(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various key-value pairs
 	f.Add("key1", "value1")
 	f.Add("", "")
@@ -71,7 +73,7 @@ func FuzzCacheSetGet(f *testing.F) {
 		ctx := context.Background()
 
 		// Test with FreeCache engine
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -112,6 +114,8 @@ func FuzzCacheSetGet(f *testing.F) {
 
 // FuzzCacheSetTTL tests cache operations with TTL
 func FuzzCacheSetTTL(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various TTL values
 	f.Add("key1", "value1", int64(1))
 	f.Add("key2", "value2", int64(60))
@@ -127,7 +131,7 @@ func FuzzCacheSetTTL(f *testing.F) {
 			t.Skip("Skipping extremely large TTL")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -172,6 +176,8 @@ func FuzzCacheSetTTL(f *testing.F) {
 
 // FuzzLockOperations tests lock creation and release
 func FuzzLockOperations(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various lock scenarios
 	f.Add("lock1", int64(1))
 	f.Add("lock2", int64(60))
@@ -187,7 +193,7 @@ func FuzzLockOperations(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -244,6 +250,8 @@ func FuzzLockOperations(f *testing.F) {
 
 // FuzzClientOptions tests client creation with various options
 func FuzzClientOptions(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different engine strings
 	f.Add("freecache")
 	f.Add("redis")
@@ -262,7 +270,7 @@ func FuzzClientOptions(f *testing.F) {
 			opts = append(opts, WithFreeCache())
 		}
 
-		client, err := newFuzzClient(ctx, opts...)
+		client, err := newFuzzClient(ctx, cache, opts...)
 		if err != nil {
 			t.Errorf("Unexpected error creating client with engine %q: %v", engineStr, err)
 			return

@@ -111,6 +111,8 @@ func FuzzRedisConfig(f *testing.F) {
 // hermetic and cheap while still exercising NewClient's option processing, engine
 // resolution, and Close.
 func FuzzNewClientWithOptions(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different option combinations
 	f.Add(true, "freecache")  // debug on, freecache
 	f.Add(false, "freecache") // debug off, freecache
@@ -141,7 +143,7 @@ func FuzzNewClientWithOptions(f *testing.F) {
 			}
 		}()
 
-		client, err := newFuzzClient(ctx, opts...)
+		client, err := newFuzzClient(ctx, cache, opts...)
 		if err != nil {
 			t.Logf("Client creation failed: %v", err)
 			return
@@ -167,6 +169,8 @@ func FuzzNewClientWithOptions(f *testing.F) {
 
 // FuzzEngineOperations tests operations specific to different engines
 func FuzzEngineOperations(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with operations for different engines
 	f.Add("freecache", "testkey", "testvalue")
 	f.Add("redis", "key123", "value456")
@@ -184,7 +188,7 @@ func FuzzEngineOperations(f *testing.F) {
 		// Only the hermetic in-memory engine is exercised; dialing Redis is not
 		// hermetic and exceeds the per-execution fuzz deadline in CI (no server).
 		// engineStr is still fuzzed to vary handling around the operations.
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Logf("Client creation failed for engine %q: %v", engineStr, err)
 			return
@@ -227,6 +231,8 @@ func FuzzEngineOperations(f *testing.F) {
 
 // FuzzClientClose tests client closing behavior
 func FuzzClientClose(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different engines
 	f.Add("freecache")
 	f.Add("redis")
@@ -238,7 +244,7 @@ func FuzzClientClose(f *testing.F) {
 
 		// Only the hermetic in-memory engine is exercised; engineStr is still
 		// fuzzed to vary handling. Dialing Redis is not hermetic in CI.
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Logf("Client creation failed for engine %q: %v", engineStr, err)
 			return
@@ -269,6 +275,8 @@ func FuzzClientClose(f *testing.F) {
 
 // FuzzEmptyCache tests the empty cache functionality
 func FuzzEmptyCache(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with different engines and key patterns
 	f.Add("freecache", "key1", "value1")
 	f.Add("redis", "key2", "value2")
@@ -283,7 +291,7 @@ func FuzzEmptyCache(f *testing.F) {
 
 		// Only the hermetic in-memory engine is exercised; engineStr is still
 		// fuzzed to vary handling. Dialing Redis is not hermetic in CI.
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Logf("Client creation failed for engine %q: %v", engineStr, err)
 			return

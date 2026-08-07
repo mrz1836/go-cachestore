@@ -10,6 +10,8 @@ import (
 
 // FuzzWriteLockWithSecret tests lock creation with custom secrets
 func FuzzWriteLockWithSecret(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various secret combinations
 	f.Add("lock1", "secret1", int64(10))
 	f.Add("lock2", "deadbeef", int64(60))
@@ -25,7 +27,7 @@ func FuzzWriteLockWithSecret(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -80,6 +82,8 @@ func FuzzWriteLockWithSecret(f *testing.F) {
 
 // FuzzWaitWriteLock tests the wait-and-acquire lock functionality
 func FuzzWaitWriteLock(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various wait scenarios
 	f.Add("waitlock1", int64(5), int64(1))
 	f.Add("waitlock2", int64(10), int64(2))
@@ -99,7 +103,7 @@ func FuzzWaitWriteLock(f *testing.F) {
 		ctx, cancel := context.WithTimeout(ctx, time.Duration(ttw+2)*time.Second)
 		defer cancel()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -147,6 +151,8 @@ func FuzzWaitWriteLock(f *testing.F) {
 
 // FuzzLockExpiration tests lock behavior with various expiration times
 func FuzzLockExpiration(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with short expiration times for testing
 	f.Add("explock1", int64(1))
 	f.Add("explock2", int64(2))
@@ -164,7 +170,7 @@ func FuzzLockExpiration(f *testing.F) {
 			t.Skip("Skipping empty lockKey")
 		}
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -204,6 +210,8 @@ func FuzzLockExpiration(f *testing.F) {
 
 // FuzzReleaseLockEdgeCases tests edge cases for lock release
 func FuzzReleaseLockEdgeCases(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various edge cases
 	f.Add("lock1", "validsecret")
 	f.Add("lock2", "")
@@ -215,7 +223,7 @@ func FuzzReleaseLockEdgeCases(f *testing.F) {
 	f.Fuzz(func(t *testing.T, lockKey, secret string) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -254,6 +262,8 @@ func FuzzReleaseLockEdgeCases(f *testing.F) {
 
 // FuzzLockValidation tests the lock validation logic
 func FuzzLockValidation(f *testing.F) {
+	cache := newFuzzCache()
+
 	// Seed corpus with various validation scenarios
 	f.Add("validkey", "validsecret")
 	f.Add("", "secret")
@@ -266,7 +276,7 @@ func FuzzLockValidation(f *testing.F) {
 	f.Fuzz(func(t *testing.T, lockKey, secret string) {
 		ctx := context.Background()
 
-		client, err := newFuzzClient(ctx)
+		client, err := newFuzzClient(ctx, cache)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
