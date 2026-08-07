@@ -25,7 +25,7 @@ func FuzzWriteLockWithSecret(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -99,7 +99,7 @@ func FuzzWaitWriteLock(f *testing.F) {
 		ctx, cancel := context.WithTimeout(ctx, time.Duration(ttw+2)*time.Second)
 		defer cancel()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -164,7 +164,7 @@ func FuzzLockExpiration(f *testing.F) {
 			t.Skip("Skipping empty lockKey")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -215,7 +215,7 @@ func FuzzReleaseLockEdgeCases(f *testing.F) {
 	f.Fuzz(func(t *testing.T, lockKey, secret string) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -266,7 +266,7 @@ func FuzzLockValidation(f *testing.F) {
 	f.Fuzz(func(t *testing.T, lockKey, secret string) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

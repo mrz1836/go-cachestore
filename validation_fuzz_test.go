@@ -64,7 +64,7 @@ func FuzzKeyTrimming(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, value string) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -143,7 +143,7 @@ func FuzzKeyValidationEdgeCases(f *testing.F) {
 			t.Skip("Skipping extremely long key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -204,7 +204,7 @@ func FuzzUnicodeHandling(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -283,7 +283,7 @@ func FuzzStringLength(f *testing.F) {
 			t.Skip("Skipping negative value length")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -336,7 +336,7 @@ func FuzzSpecialCharacters(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -388,7 +388,7 @@ func FuzzControlCharacters(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

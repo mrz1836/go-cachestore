@@ -24,7 +24,7 @@ func FuzzSetWithDependencies(f *testing.F) {
 		}
 
 		// Test with FreeCache (dependencies are not supported, but should not fail)
-		clientFC, err := NewClient(ctx, WithFreeCache())
+		clientFC, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create FreeCache client: %v", err)
 		}
@@ -89,7 +89,7 @@ func FuzzSetTTLWithDependencies(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -147,7 +147,7 @@ func FuzzDependencyValidation(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -212,7 +212,7 @@ func FuzzDependencyEdgeCases(f *testing.F) {
 			t.Skip("Skipping empty key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -269,7 +269,7 @@ func FuzzDependencyOrder(f *testing.F) {
 			t.Skip("Skipping empty base key")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -331,7 +331,7 @@ func FuzzDuplicateDependencies(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -386,7 +386,7 @@ func FuzzDependencyLength(f *testing.F) {
 			t.Skip("Skipping invalid inputs")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -431,7 +431,7 @@ func FuzzConcurrentDependencies(f *testing.F) {
 			t.Skip("Skipping empty key prefix")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}

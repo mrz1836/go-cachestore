@@ -71,7 +71,7 @@ func FuzzCacheSetGet(f *testing.F) {
 		ctx := context.Background()
 
 		// Test with FreeCache engine
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -127,7 +127,7 @@ func FuzzCacheSetTTL(f *testing.F) {
 			t.Skip("Skipping extremely large TTL")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -187,7 +187,7 @@ func FuzzLockOperations(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -255,24 +255,15 @@ func FuzzClientOptions(f *testing.F) {
 		ctx := context.Background()
 
 		var opts []ClientOps
-		switch strings.ToLower(engineStr) {
-		case "freecache":
+		// Only in-memory options are exercised. Dialing Redis is not hermetic and
+		// its dial timeout exceeds the per-execution fuzz deadline in CI (no
+		// server); engineStr is still fuzzed to vary option handling.
+		if strings.EqualFold(engineStr, "freecache") {
 			opts = append(opts, WithFreeCache())
-		case "redis":
-			opts = append(opts, WithRedis(&RedisConfig{URL: "redis://localhost:6379"}))
-		case "empty":
-			// No engine option - will default to empty
-		default:
-			// Invalid engine - will use default
 		}
 
-		client, err := NewClient(ctx, opts...)
+		client, err := newFuzzClient(ctx, opts...)
 		if err != nil {
-			// Invalid engines or Redis connection failures are acceptable
-			if strings.ToLower(engineStr) == "redis" || (engineStr != "" && strings.ToLower(engineStr) != "freecache" && strings.ToLower(engineStr) != "empty") {
-				t.Logf("Client creation failed for engine %q as expected: %v", engineStr, err)
-				return
-			}
 			t.Errorf("Unexpected error creating client with engine %q: %v", engineStr, err)
 			return
 		}

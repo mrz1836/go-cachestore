@@ -46,7 +46,7 @@ func FuzzSetGetModel(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -149,7 +149,7 @@ func FuzzComplexModelSerialization(f *testing.F) {
 			t.Skip("Skipping invalid TTL")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -245,7 +245,7 @@ func FuzzModelJSONEdgeCases(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, jsonStr string) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -312,7 +312,7 @@ func FuzzModelNilPointers(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key string, useNilModel, useEmptyModel bool) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -371,7 +371,7 @@ func FuzzModelTypeConsistency(f *testing.F) {
 	f.Fuzz(func(t *testing.T, key, stringVal string, intVal int64, floatVal float64) {
 		ctx := context.Background()
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
@@ -454,7 +454,7 @@ func FuzzModelSize(f *testing.F) {
 			t.Skip("Skipping invalid or large sizes")
 		}
 
-		client, err := NewClient(ctx, WithFreeCache())
+		client, err := newFuzzClient(ctx)
 		if err != nil {
 			t.Fatalf("Failed to create client: %v", err)
 		}
