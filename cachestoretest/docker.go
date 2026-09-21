@@ -17,6 +17,8 @@ package cachestoretest
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"os/exec"
 	"strings"
 	"testing"
@@ -82,17 +84,22 @@ func skipIfNoDocker(tb testing.TB) {
 	}
 }
 
-// startContainer runs the image detached, publishing 6379 to a random loopback
-// host port, and returns the connection URL. The container is force-removed via
-// t.Cleanup.
+// startContainer runs the image detached, publishing container port 6379 to a
+// pre-selected free loopback host port, and returns the connection URL. Binding
+// an explicit port (rather than querying `docker port` afterwards) avoids a
+// race where the mapping is not yet reported right after `docker run`. The
+// container is force-removed via t.Cleanup.
 func startContainer(tb testing.TB, image string) string {
 	tb.Helper()
+
+	hostPort := freePort(tb)
+	publish := fmt.Sprintf("127.0.0.1:%d:6379", hostPort)
 
 	runCtx, cancel := context.WithTimeout(context.Background(), startTimeout)
 	defer cancel()
 	//nolint:gosec // G204: test helper intentionally runs the local docker CLI
 	out, err := exec.CommandContext(runCtx, "docker", "run", "-d", "--rm",
-		"-p", "127.0.0.1::6379", image).CombinedOutput()
+		"-p", publish, image).CombinedOutput()
 	if err != nil {
 		tb.Fatalf("docker run failed: %v: %s", err, out)
 	}
@@ -105,29 +112,19 @@ func startContainer(tb testing.TB, image string) string {
 		_ = exec.CommandContext(rmCtx, "docker", "rm", "-f", id).Run()
 	})
 
-	portCtx, portCancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer portCancel()
-	//nolint:gosec // G204: test helper intentionally runs the local docker CLI
-	portOut, err := exec.CommandContext(portCtx, "docker", "port", id, "6379/tcp").CombinedOutput()
-	if err != nil {
-		tb.Fatalf("docker port failed: %v: %s", err, portOut)
-	}
-
-	hostPort := firstHostPort(string(portOut))
-	if hostPort == "" {
-		tb.Fatalf("could not resolve mapped port from %q", portOut)
-	}
-	return "redis://" + hostPort
+	return fmt.Sprintf("redis://127.0.0.1:%d", hostPort)
 }
 
-// firstHostPort returns the first "host:port" line from `docker port` output.
-func firstHostPort(portOutput string) string {
-	for _, line := range strings.Split(strings.TrimSpace(portOutput), "\n") {
-		if line = strings.TrimSpace(line); line != "" {
-			return line
-		}
+// freePort asks the OS for an available loopback TCP port.
+func freePort(tb testing.TB) int {
+	tb.Helper()
+	var lc net.ListenConfig
+	l, err := lc.Listen(context.Background(), "tcp", "127.0.0.1:0")
+	if err != nil {
+		tb.Fatalf("could not find a free port: %v", err)
 	}
-	return ""
+	defer func() { _ = l.Close() }()
+	return l.Addr().(*net.TCPAddr).Port
 }
 
 // newClientWithRetry builds a cachestore client, retrying until the server
