@@ -181,8 +181,55 @@ This command ensures all dependencies are brought up to date in a single step, i
 
 <br/>
 
+## Redis & Valkey
+
+The Redis engine works with both [Redis](https://redis.io) and [Valkey](https://valkey.io) — they are wire-compatible, so the same `RedisConfig` connects to either engine; just point `URL` at your instance. Supported URL schemes: `redis://`, `rediss://`, `valkey://`, `valkeys://` (the `s` variants enable TLS).
+
+```go
+// Local (Redis or Valkey)
+client, err := cachestore.NewClient(ctx, cachestore.WithRedis(&cachestore.RedisConfig{
+    URL:                "redis://localhost:6379", // or valkey://localhost:6379
+    MaxIdleConnections: 10,
+}))
+```
+
+### AWS ElastiCache (TLS + RBAC / ACL)
+
+For ElastiCache (Redis **or** Valkey) with in-transit encryption and RBAC, use a `rediss://` URL (or set `UseTLS: true`) and supply the ACL `Username`/`Password`. Keeping credentials in the config (rather than the URL) keeps them out of logs. Leave `TLSServerName` empty and it defaults to the endpoint host — the correct SNI for ElastiCache.
+
+```go
+client, err := cachestore.NewClient(ctx, cachestore.WithRedis(&cachestore.RedisConfig{
+    URL:                "rediss://my-cluster.abc123.use1.cache.amazonaws.com:6379",
+    MaxIdleConnections: 10,
+    Username:           "app-user", // ElastiCache RBAC / Redis ACL user
+    Password:           os.Getenv("REDIS_PASSWORD"),
+    // Optional TLS controls (all optional; rediss:// already enables TLS):
+    //   TLSConfig             *tls.Config // full custom config (wins over the fields below)
+    //   TLSServerName         string      // SNI override
+    //   TLSCACertPath         string      // custom CA bundle (PEM)
+    //   TLSInsecureSkipVerify bool         // testing only
+}))
+```
+
+> Single-endpoint (cluster-mode-disabled) deployments are supported. Sharded cluster mode is not yet implemented; the config is designed so it can be added later without breaking the API.
+
+### Local testing with real Redis/Valkey
+
+The [`cachestoretest`](./cachestoretest) subpackage can spin up throwaway **real** Redis or Valkey servers for your tests using the local Docker CLI. It adds **no dependencies** to your module and skips automatically when Docker is unavailable:
+
+```go
+import "github.com/mrz1836/go-cachestore/cachestoretest"
+
+func TestWithValkey(t *testing.T) {
+    client, _ := cachestoretest.StartValkey(t) // or StartRedis(t)
+    require.NoError(t, client.Set(context.Background(), "key", "value"))
+}
+```
+
+<br/>
+
 ## Examples & Tests
-All unit tests run via [GitHub Actions](https://github.com/mrz1836/go-template/actions) and use [Go version 1.25.x](https://go.dev/doc/go1.25). View the [configuration file](.github/workflows/fortress.yml).
+All unit tests run via [GitHub Actions](https://github.com/mrz1836/go-template/actions) and use [Go version 1.26.x](https://go.dev/doc/go1.26). View the [configuration file](.github/workflows/fortress.yml).
 
 Run all tests (fast):
 

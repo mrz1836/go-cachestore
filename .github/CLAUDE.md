@@ -37,11 +37,19 @@
 // Basic usage
 client, err := cachestore.NewClient(ctx, cachestore.WithFreeCache())
 
-// Redis with config
+// Redis or Valkey with config (wire-compatible; use redis:// or valkey://)
 client, err := cachestore.NewClient(ctx, cachestore.WithRedis(&RedisConfig{
     URL: "redis://localhost:6379",
     MaxIdleConnections: 10,
     UseTLS: false,
+}))
+
+// AWS ElastiCache (TLS + RBAC/ACL): rediss:// enables TLS; Username triggers two-arg AUTH
+client, err := cachestore.NewClient(ctx, cachestore.WithRedis(&RedisConfig{
+    URL: "rediss://my-cluster.abc123.use1.cache.amazonaws.com:6379",
+    MaxIdleConnections: 10,
+    Username: "app-user",
+    Password: os.Getenv("REDIS_PASSWORD"),
 }))
 
 // With existing connections
@@ -75,7 +83,7 @@ magex audit:report      # Security audit
 - Uses GitHub Actions with fortress.yml workflow
 - CodeQL security analysis
 - Dependabot auto-merge
-- Multi-version Go testing (Go 1.25+)
+- Multi-version Go testing (Go 1.26+)
 
 ## File Structure
 
@@ -97,12 +105,15 @@ magex audit:report      # Security audit
 - Fuzz testing for all major components
 - Race condition testing
 - Engine-specific test suites
+- Real Redis/Valkey via the `cachestoretest` subpackage (Docker CLI, no added deps; skips without Docker)
 
 ## Critical Notes
 
 ### Redis Features
+- Redis and Valkey supported (wire-compatible; same client/config)
 - Dependency keys for cache invalidation
-- TLS support for cloud Redis (DigitalOcean)
+- TLS support for cloud Redis (DigitalOcean, AWS ElastiCache) via `rediss://` / `UseTLS` / custom `TLSConfig`
+- RBAC / ACL username+password auth (two-arg AUTH) for ElastiCache
 - Connection pooling and lifecycle management
 - NewRelic integration for monitoring
 
