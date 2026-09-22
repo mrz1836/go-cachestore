@@ -28,5 +28,8 @@ var ErrTTWCannotBeEmpty = errors.New("the TTW value cannot be empty")
 // ErrInvalidRedisConfig is when the redis config is missing or invalid
 var ErrInvalidRedisConfig = errors.New("invalid redis config")
 
+// ErrInvalidRedisCACert is when the redis TLS CA certificate cannot be loaded
+var ErrInvalidRedisCACert = errors.New("invalid redis tls ca certificate")
+
 // ErrAppNameRequired is when the app name is required
 var ErrAppNameRequired = errors.New("app name is required")

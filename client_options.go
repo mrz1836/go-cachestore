@@ -61,8 +61,9 @@ func WithRedis(redisConfig *RedisConfig) ClientOps {
 			return
 		}
 
-		// Add prefix if missing
-		if !strings.Contains(redisConfig.URL, RedisPrefix) {
+		// Add the default scheme when the URL has none
+		// (leaves redis://, rediss://, valkey:// and valkeys:// intact)
+		if !strings.Contains(redisConfig.URL, "://") {
 			redisConfig.URL = RedisPrefix + redisConfig.URL
 		}
 

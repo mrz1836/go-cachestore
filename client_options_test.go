@@ -150,6 +150,29 @@ func TestWithRedis(t *testing.T) {
 
 		assert.Equal(t, Redis, c.Engine())
 	})
+
+	t.Run("url scheme normalization", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name string
+			in   string
+			want string
+		}{
+			{name: "bare host:port gets a scheme", in: "localhost:6379", want: "redis://localhost:6379"},
+			{name: "redis scheme untouched", in: "redis://localhost:6379", want: "redis://localhost:6379"},
+			{name: "rediss scheme untouched", in: "rediss://localhost:6379", want: "rediss://localhost:6379"},
+			{name: "valkey scheme untouched", in: "valkey://localhost:6379", want: "valkey://localhost:6379"},
+			{name: "valkeys scheme untouched", in: "valkeys://localhost:6379", want: "valkeys://localhost:6379"},
+		}
+		for _, tc := range tests {
+			t.Run(tc.name, func(t *testing.T) {
+				options := defaultClientOptions()
+				WithRedis(&RedisConfig{URL: tc.in})(options)
+				assert.Equal(t, tc.want, options.redisConfig.URL)
+			})
+		}
+	})
 }
 
 // TestWithRedisConnection will test the method WithRedisConnection()
