@@ -19,8 +19,12 @@ var ErrSecretGenerationFailed = errors.New("failed generating secret")
 // ErrLockCreateFailed is the error when creating a lock fails
 var ErrLockCreateFailed = errors.New("failed creating cache lock")
 
-// ErrLockExists is the error when trying to create a lock fails due to an existing lock
+// ErrLockExists is wrapped by the error of WriteLock, WriteLockWithSecret, and
+// WaitWriteLock when another secret holds the lock
 var ErrLockExists = errors.New("lock already exists with a different secret")
+
+// ErrInvalidTTL is returned for a negative TTL, and for a lock TTL of zero or less
+var ErrInvalidTTL = errors.New("invalid ttl")
 
 // ErrTTWCannotBeEmpty is when the TTW field is empty
 var ErrTTWCannotBeEmpty = errors.New("the TTW value cannot be empty")
