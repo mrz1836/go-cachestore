@@ -107,6 +107,11 @@ func (c *Client) WaitWriteLock(ctx context.Context, lockKey string, ttl, ttw int
 }
 
 // ReleaseLock will release a given lock key only if the secret matches
+//
+// Taking a lock and releasing it are each one atomic step on both engines. On
+// FreeCache, which has no compare-and-delete, a release leaves an empty value
+// that expires within a second; Get reads it as missing, and the next lock
+// takes it
 func (c *Client) ReleaseLock(ctx context.Context, lockKey, secret string) (bool, error) {
 	// Test the key and secret
 	if err := validateLockValues(lockKey, secret); err != nil {

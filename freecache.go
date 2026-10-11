@@ -1,7 +1,6 @@
 package cachestore
 
 import (
-	"errors"
 	"runtime/debug"
 
 	"github.com/coocood/freecache"
@@ -35,47 +34,55 @@ func loadFreeCache(cacheSize, percent int) (c *freecache.Cache) {
 	return c
 }
 
-// writeLockFreeCache will write a lock record into memory using a secret and expiration
-//
-// ttl is in seconds
-func writeLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string, ttl int64) (bool, error) { //nolint:unparam // bool is not being used yet
+// releasedLockSeconds is how long a released FreeCache lock's empty value lives
+const releasedLockSeconds = 1
 
-	// Try to get an existing lock (if it fails, make a new lock)
-	lockKeyBytes := []byte(lockKey)
+// writeLockFreeCache takes lockKey for secret in one atomic step
+//
+// One Update, under FreeCache's lock for the key, stores the secret when the key
+// is missing, released (empty), or already holds the same secret, and leaves it
+// alone otherwise. ttl is in seconds
+func writeLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string, ttl int64) (bool, error) { //nolint:unparam // bool is not being used yet
 	secretBytes := []byte(secret)
-	data, err := freeCacheClient.Get(lockKeyBytes)
-	if err != nil && errors.Is(err, freecache.ErrNotFound) {
-		return true, freeCacheClient.Set(lockKeyBytes, secretBytes, int(ttl))
-	} else if err != nil {
+	_, replaced, err := freeCacheClient.Update([]byte(lockKey), func(value []byte, found bool) ([]byte, bool, int) {
+		if !found || len(value) == 0 || string(value) == secret {
+			return secretBytes, true, int(ttl)
+		}
+		return nil, false, 0
+	})
+	if err != nil {
 		return false, err
 	}
 
-	// Check secret
-	if string(data) != secret { // Secret mismatch (lock exists with different secret)
+	// Another secret holds the lock
+	if !replaced {
 		return false, cache.ErrLockMismatch
 	}
-
-	// Same secret / lock again?
-	return true, freeCacheClient.Set(lockKeyBytes, secretBytes, int(ttl))
+	return true, nil
 }
 
-// releaseLockFreeCache will attempt to release a lock if it exists and matches the given secret
+// releaseLockFreeCache releases lockKey in one atomic step when it holds secret
+//
+// FreeCache has no compare-and-delete, so one Update replaces the matching secret
+// with an empty value that expires within releasedLockSeconds; Get reads it as
+// missing, and writeLockFreeCache treats it as free. A missing or released key
+// is already free
 func releaseLockFreeCache(freeCacheClient *freecache.Cache, lockKey, secret string) (bool, error) {
-	// Try to get an existing lock (if it fails, lock does not exist)
-	lockKeyBytes := []byte(lockKey)
-	data, err := freeCacheClient.Get(lockKeyBytes)
-	if err != nil && errors.Is(err, freecache.ErrNotFound) {
-		return true, nil
-	} else if err != nil {
+	var heldByAnother bool
+	_, _, err := freeCacheClient.Update([]byte(lockKey), func(value []byte, found bool) ([]byte, bool, int) {
+		if found && string(value) == secret {
+			return []byte{}, true, releasedLockSeconds
+		}
+		heldByAnother = found && len(value) > 0
+		return nil, false, 0
+	})
+	if err != nil {
 		return false, err
-	}
-
-	// Check secret if found
-	if string(data) == secret { // If it matches, remove the key
-		freeCacheClient.Del(lockKeyBytes)
-		return true, nil
 	}
 
 	// Key found does not match the secret, do not remove
-	return false, cache.ErrLockMismatch
+	if heldByAnother {
+		return false, cache.ErrLockMismatch
+	}
+	return true, nil
 }
