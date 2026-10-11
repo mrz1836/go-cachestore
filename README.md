@@ -228,6 +228,43 @@ func TestWithValkey(t *testing.T) {
 
 <br/>
 
+## Values, TTLs, and locks
+
+### TTLs
+
+`SetTTL`, `SetModel`, and `SetModelValue` follow one rule on both engines:
+
+| TTL                       | Stored as                                                                                             |
+|---------------------------|-------------------------------------------------------------------------------------------------------|
+| A whole number of seconds | That many seconds                                                                                     |
+| A fraction of a second    | Rounded up to whole seconds: `500*time.Millisecond` lives one second, and `1500*time.Millisecond` two |
+| `0`                       | No expiry, as `Set` stores                                                                            |
+| Negative                  | Refused with `ErrInvalidTTL`; nothing is written                                                      |
+
+Rounding up means a fraction never shortens a TTL or turns it into no expiry. FreeCache counts time in whole seconds, so there an entry expires within the last second of its TTL (a two-second entry lives between one and two seconds). Redis and Valkey keep milliseconds.
+
+### Locks
+
+```go
+secret, err := client.WriteLock(ctx, "reports:daily", 30) // TTL in seconds, at least 1
+switch {
+case errors.Is(err, cachestore.ErrLockExists):
+    // another secret holds the lock: try again later
+case err != nil:
+    // the lock couldn't be taken (err wraps the cause and ErrLockCreateFailed)
+default:
+    defer func() { _, _ = client.ReleaseLock(ctx, "reports:daily", secret) }()
+    // ... the work the lock protects
+}
+```
+
+- **TTLs.** A lock's TTL is in seconds and must be at least one; zero or less returns `ErrInvalidTTL`.
+- **Errors.** Every failure to take a lock wraps `ErrLockCreateFailed` and its cause, and reads `<cause>: failed creating cache lock`. When another secret holds the lock, the error also wraps `ErrLockExists`, so `errors.Is` tells a held lock from a store that failed.
+- **Atomic on both engines.** Taking a lock and releasing it are each one atomic step on FreeCache too. FreeCache has no compare-and-delete, so a released FreeCache lock leaves an empty value for up to a second; `Get` reads it as missing, and the next lock takes it.
+- **Waiting.** `WaitWriteLock(ctx, key, ttl, ttw)` tries again every 10 ms while another secret holds the lock, for up to `ttw` seconds. It returns `ctx`'s error as soon as `ctx` is done, any other failure at once, and, when `ttw` runs out, the last attempt's error (which wraps `ErrLockExists`). A nil `ctx` waits with no cancellation.
+
+<br/>
+
 ## Examples & Tests
 All unit tests run via [GitHub Actions](https://github.com/mrz1836/go-template/actions) and use [Go version 1.26.x](https://go.dev/doc/go1.26). View the [configuration file](.github/workflows/fortress.yml).
 
