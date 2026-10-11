@@ -37,6 +37,9 @@ func GetModelValue[T any](ctx context.Context, c CacheService, key string) (T, b
 // is the generic counterpart to Client.SetModel and the write side of
 // GetModelValue.
 //
+// The TTL follows SetModel's rule: whole seconds, rounded up; 0 is no expiry; a
+// negative TTL returns ErrInvalidTTL and stores nothing.
+//
 // Redis only supports dependency keys at this time.
 func SetModelValue[T any](ctx context.Context, c CacheService, key string, value T, ttl time.Duration, dependencies ...string) error {
 	return c.SetModel(ctx, key, &value, ttl, dependencies...)

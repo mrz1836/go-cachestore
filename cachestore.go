@@ -17,6 +17,7 @@ import (
 
 // Set will set a key->value using the current engine
 //
+// The value has no expiry, on either engine
 // Redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) Set(ctx context.Context, key string, value interface{}, dependencies ...string) error {
@@ -39,6 +40,12 @@ func (c *Client) Set(ctx context.Context, key string, value interface{}, depende
 
 // SetTTL will set a key->value using the current engine with a TTL
 //
+// The TTL is counted in whole seconds, rounded up, on both engines, so a fraction
+// never shortens it or turns it into no expiry: 500ms lives one second, and 1.5s
+// two. A TTL of 0 stores the value with no expiry, as Set does. A negative TTL
+// returns ErrInvalidTTL and stores nothing. FreeCache counts time in whole
+// seconds, so there an entry expires within the last second of its TTL
+//
 // Redis only supports dependency keys at this time
 // Value should be used as a string for best results
 func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl time.Duration, dependencies ...string) error {
@@ -50,13 +57,22 @@ func (c *Client) SetTTL(ctx context.Context, key string, value interface{}, ttl 
 		return ErrKeyRequired
 	}
 
-	// Redis
+	// Whole seconds, rounded up (zero is no expiry)
+	secs, err := ttlSeconds(ttl)
+	if err != nil {
+		return err
+	}
+
+	// Redis (no expiry is a plain SET, since SETEX refuses zero)
 	if c.Engine() == Redis {
-		return cache.SetExp(ctx, c.options.redis, key, value, ttl, dependencies...)
+		if secs == 0 {
+			return cache.Set(ctx, c.options.redis, key, value, dependencies...)
+		}
+		return cache.SetExp(ctx, c.options.redis, key, value, time.Duration(secs)*time.Second, dependencies...)
 	}
 
 	// FreeCache
-	return c.options.freeCache.Set([]byte(key), []byte(value.(string)), int(ttl.Seconds()))
+	return c.options.freeCache.Set([]byte(key), []byte(value.(string)), int(secs))
 }
 
 // Get will return a value from a given key
@@ -115,6 +131,11 @@ func (c *Client) Delete(ctx context.Context, key string) error {
 
 // SetModel will set any model or struct (parsing Model->JSON (bytes))
 //
+// The TTL follows SetTTL's rule: whole seconds, rounded up, on both engines; 0 is
+// no expiry; a negative TTL returns ErrInvalidTTL and stores nothing. FreeCache
+// counts time in whole seconds, so there an entry expires within the last second
+// of its TTL
+//
 // Model needs to be a pointer to a struct
 // Redis only supports dependency keys at this time
 func (c *Client) SetModel(ctx context.Context, key string, model interface{},
@@ -128,9 +149,15 @@ func (c *Client) SetModel(ctx context.Context, key string, model interface{},
 		return ErrKeyRequired
 	}
 
-	// Redis
+	// Whole seconds, rounded up (zero is no expiry)
+	secs, err := ttlSeconds(ttl)
+	if err != nil {
+		return err
+	}
+
+	// Redis (go-cache stores a zero TTL with a plain SET)
 	if c.Engine() == Redis {
-		return cache.SetToJSON(ctx, c.options.redis, key, model, ttl, dependencies...)
+		return cache.SetToJSON(ctx, c.options.redis, key, model, time.Duration(secs)*time.Second, dependencies...)
 	}
 
 	// Parse into JSON
@@ -140,7 +167,7 @@ func (c *Client) SetModel(ctx context.Context, key string, model interface{},
 	}
 
 	// FreeCache (store the bytes)
-	return c.options.freeCache.Set([]byte(key), responseBytes, int(ttl.Seconds()))
+	return c.options.freeCache.Set([]byte(key), responseBytes, int(secs))
 }
 
 // GetModel will get a model (parsing JSON (bytes) -> Model)
