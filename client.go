@@ -14,6 +14,7 @@ type (
 	// Client is the client (configuration)
 	Client struct {
 		options *clientOptions
+		loads   loadGroup // GetOrLoad's fills in progress, so its callers on this client share one load per key
 	}
 
 	// clientOptions holds all the configuration for the client

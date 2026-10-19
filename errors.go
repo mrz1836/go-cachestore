@@ -26,6 +26,10 @@ var ErrLockExists = errors.New("lock already exists with a different secret")
 // ErrInvalidTTL is returned for a negative TTL, and for a lock TTL of zero or less
 var ErrInvalidTTL = errors.New("invalid ttl")
 
+// ErrLoadInProgress is returned by GetOrLoad and GetOrLoadWithOptions when another
+// process holds the key's fill lock and LockWait passes without a stored value
+var ErrLoadInProgress = errors.New("another caller is still loading this key")
+
 // ErrTTWCannotBeEmpty is when the TTW field is empty
 var ErrTTWCannotBeEmpty = errors.New("the TTW value cannot be empty")
 
