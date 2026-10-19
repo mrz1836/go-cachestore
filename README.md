@@ -228,7 +228,7 @@ func TestWithValkey(t *testing.T) {
 
 <br/>
 
-## Values, TTLs, and locks
+## Values, TTLs, locks, and `GetOrLoad`
 
 ### TTLs
 
@@ -262,6 +262,58 @@ default:
 - **Errors.** Every failure to take a lock wraps `ErrLockCreateFailed` and its cause, and reads `<cause>: failed creating cache lock`. When another secret holds the lock, the error also wraps `ErrLockExists`, so `errors.Is` tells a held lock from a store that failed.
 - **Atomic on both engines.** Taking a lock and releasing it are each one atomic step on FreeCache too. FreeCache has no compare-and-delete, so a released FreeCache lock leaves an empty value for up to a second; `Get` reads it as missing, and the next lock takes it.
 - **Waiting.** `WaitWriteLock(ctx, key, ttl, ttw)` tries again every 10 ms while another secret holds the lock, for up to `ttw` seconds. It returns `ctx`'s error as soon as `ctx` is done, any other failure at once, and, when `ttw` runs out, the last attempt's error (which wraps `ErrLockExists`). A nil `ctx` waits with no cancellation.
+
+### GetOrLoad
+
+`GetOrLoad` reads a key and decodes its JSON into a `T`. On a miss it calls `load` once, stores the result with the TTL (under the rule above), and returns it:
+
+```go
+ctx := context.Background()
+client, err := cachestore.NewClient(ctx, cachestore.WithFreeCache())
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer client.Close(ctx)
+
+// load stands in for an expensive query
+loads := 0
+load := func(context.Context) (int, error) {
+    loads++
+    return 42, nil
+}
+
+var answer int
+for range 3 {
+    if answer, err = cachestore.GetOrLoad(ctx, client, "answer", time.Minute, load); err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(answer) // 42, three times
+}
+fmt.Println("loads:", loads) // loads: 1
+```
+
+- **One load per key, per client.** Callers on the same client and key share one call to `load`; the others wait for its result. Each caller decodes its own copy, so `T` must round-trip through `encoding/json`.
+- **Across processes, on Redis and Valkey only.** The call runs only while it holds the key's fill lock, `<key>:fill-lock`. A caller in another process that finds the lock held re-reads the key every `PollInterval`, takes the lock itself once it is free and the key is still empty, and returns `ErrLoadInProgress` when `LockWait` passes without a value. FreeCache is one process and has no fill lock, so there the shared call is the whole guarantee.
+- **Errors are never cached.** An error from `load` reaches every caller of that call, as `load` returned it, and nothing is stored, so the next call loads again. A stored value that no longer decodes counts as a miss, and the load replaces it.
+- **Contexts.** `load` runs with the first caller's context values but not its cancellation, under a deadline of `LockTTL`, so one caller leaving fails none of the others. Each caller returns its own context's error as soon as its context is done. A panic in `load` is raised again in each waiting caller.
+
+`GetOrLoadWithOptions` takes `LoadOptions`, whose zero or negative fields take their defaults:
+
+| Option         | Default | What it sets                                                                    |
+|----------------|---------|---------------------------------------------------------------------------------|
+| `LockTTL`      | 10 s    | The fill lock's TTL, rounded up to whole seconds, and the longest one load runs |
+| `LockWait`     | 5 s     | How long a caller waits for another process's load                              |
+| `PollInterval` | 50 ms   | How often a waiting caller re-reads the key                                     |
+
+```go
+report, err := cachestore.GetOrLoadWithOptions(ctx, client, "report:daily", time.Minute, buildReport,
+    cachestore.LoadOptions{LockWait: time.Second})
+if errors.Is(err, cachestore.ErrLoadInProgress) {
+    // another process is still building the report: ask the caller to retry shortly
+}
+```
 
 <br/>
 
