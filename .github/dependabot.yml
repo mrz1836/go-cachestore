@@ -13,6 +13,8 @@
 # Security Hardened Defaults:
 #   • Weekly cadence (Tuesday 11:00 America/New_York) – align with typical maintenance windows.
 #   • Direct dependencies only – prevents unsolicited transitive churn.
+#   • Cooldown – new releases wait 3 days (gomod: patch 3 / minor 7 / major 14 days) before a
+#     version‑update PR; first‑party and trusted publishers are exempt. Security updates are never delayed.
 #   • PRs labeled, assigned, and target the protected master branch.
 #   • PR titles prefixed with chore(scope): – conventional commits.
 #   • Force‑push and delete‑branch disabled via branch‑protection rules.
@@ -47,6 +49,12 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    cooldown:
+      default-days: 3
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
+      exclude: ["github.com/mrz1836/*"]
 
   # ──────────────────────────────────────────────────────────────
   # 2. GitHub Actions Workflows
@@ -70,6 +78,9 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    cooldown:
+      default-days: 3
+      exclude: ["actions/*", "github/*", "gitleaks/*", "ossf/*"]
 
   # ──────────────────────────────────────────────────────────────
   # 3. DevContainer (devcontainer.json : base image + features)
@@ -93,3 +104,6 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    cooldown:
+      default-days: 3
+      exclude: ["ghcr.io/devcontainers/features/*"]
