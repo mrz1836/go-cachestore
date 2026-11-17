@@ -6,8 +6,8 @@ require (
 	github.com/alicebob/miniredis/v2 v2.40.0
 	github.com/coocood/freecache v1.2.7
 	github.com/gomodule/redigo v1.9.3
-	github.com/mrz1836/go-cache v1.2.3
-	github.com/mrz1836/go-logger v1.0.6
+	github.com/mrz1836/go-cache v1.2.4
+	github.com/mrz1836/go-logger v1.0.7
 	github.com/newrelic/go-agent/v3 v3.45.0
 	github.com/pkg/errors v0.9.1
 	github.com/rafaeljusto/redigomock v2.4.0+incompatible
